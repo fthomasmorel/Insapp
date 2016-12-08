@@ -3,7 +3,7 @@
         nginx:
             build: ./Insapp-web
             ports:
-                - 9000:80
+                - 9010:80
             volumes:
                 - ./insapp-cdn/:/var/insapp-cdn/
             depends_on:

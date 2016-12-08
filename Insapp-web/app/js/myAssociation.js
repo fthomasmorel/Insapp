@@ -20,11 +20,11 @@ function($scope, $resource, Session, $location, ngDialog, Upload, fileUpload, $l
   }
 
   Association.get({id:$scope.associationId, token:Session.getToken()}, function(assos) {
-    $scope.profilePictureFile = (assos.profile != null ? 'https://insapp.fr/cdn/' + assos.profile : null)
-    $scope.coverPictureFile = (assos.cover != null ? 'https://insapp.fr/cdn/' + assos.cover : null)
+    $scope.profilePictureFile = (assos.profile != null ? configuration.cdn + assos.profile : null)
+    $scope.coverPictureFile = (assos.cover != null ? configuration.cdn + assos.cover : null)
 
-    assos.profilePictureUrl = (assos.profile != null ? 'https://insapp.fr/cdn/' + assos.profile : null)
-    assos.coverPictureUrl = (assos.cover != null ? 'https://insapp.fr/cdn/' + assos.cover : null)
+    assos.profilePictureUrl = (assos.profile != null ? configuration.cdn + assos.profile : null)
+    assos.coverPictureUrl = (assos.cover != null ? configuration.cdn + assos.cover : null)
 
     $scope.oldAssociation = assos
     $scope.currentAssociation = assos

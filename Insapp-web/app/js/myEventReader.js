@@ -14,10 +14,10 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
 
   Event.get({id:$routeParams.id, token:Session.getToken()}, function(event) {
       event.nbParticipant = (event.participants != null ? event.participants.length : 0)
-      $scope.eventImageFile = 'https://insapp.fr/cdn/' + event.image
+      $scope.eventImageFile = configuration.cdn + event.image
       $scope.oldEvent = event
       $scope.currentEvent = event
-      $scope.currentEvent.imageUrl = 'https://insapp.fr/cdn/' + event.image
+      $scope.currentEvent.imageUrl = configuration.cdn + event.image
 
       if (event.palette && event.palette.length > 1) {
         $scope.palette = event.palette

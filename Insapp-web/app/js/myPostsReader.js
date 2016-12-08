@@ -16,7 +16,7 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
     post.nbLikes = (post.likes != null ? post.likes.length : 0)
     post.nbComments = (post.comments != null ? post.comments.length : 0)
       $scope.currentPost = post
-      $scope.currentPost.imageUrl = 'https://insapp.fr/cdn/' + post.image
+      $scope.currentPost.imageUrl = configuration.cdn + post.image
     }, function(error) {
         Session.destroyCredentials()
         $location.path('/login')
@@ -32,7 +32,7 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
     Comment.remove({id:$scope.currentPost.ID, commentId: commentId, token:Session.getToken()}, function(post) {
       post.nbLikes = (post.likes != null ? post.likes.length : 0)
       post.nbComments = (post.comments != null ? post.comments.length : 0)
-        post.image = 'https://insapp.fr/cdn/' + post.photourl
+        post.image = configuration.cdn + post.photourl
         $scope.currentPost = post
       ngDialog.open({
           template: "<h2 style='text-align:center;'>Le commentaire a été supprimé</h2>",
