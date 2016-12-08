@@ -1,0 +1,20 @@
+    version: '2'
+    services:
+        nginx:
+            build: ./Insapp-web
+            ports:
+                - 9000:80
+            volumes:
+                - ./insapp-cdn/:/var/insapp-cdn/
+            depends_on:
+                - golang
+        golang:
+            build: ./Insapp-go
+            volumes:
+                - ./insapp-cdn/:/go/src/app/src/img/
+            depends_on:
+                - mongo
+        mongo:
+            image: mongo
+            volumes:
+                - ./insapp-db/:/data/db
