@@ -1,0 +1,72 @@
+
+  <div ng-controller="MyAssociation" style="">
+      <form class="form-horizontal col-md-6" name="form" ng-submit="updateAssociation()">
+        <h1 style="padding:10px;">@{{currentAssociation.name}}</h1>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Cover Image</label>
+          <div class="col-sm-10">
+            <div ng-hide="coverPictureFile != null" ngf-drop ng-model="coverPictureFile" style="background: #F8F8F8; border: 5px dashed #DDD; height: 300px; text-align: center; padding: 50px 10px;" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-fix-orientation="true">Déposer une image ici</div>
+            <img id="coverPicture" ng-show="coverPictureFile != null" class="img-rounded" height="300" ng-src="{{currentAssociation.coverPictureUrl}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label"></label>
+          <div class="col-sm-10">
+            <div ng-hide="coverPictureFile != null" class="btn btn-success" ng-model="coverPictureFile" ngf-select="upload($coverPictureFile)" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-fix-orientation="true">Selectionner</div>
+            <div ng-show="coverPictureFile != null" class="btn btn-danger" ng-click="removeCoverPicture()">Supprimer</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Profile Image</label>
+          <div class="col-sm-10">
+            <div ng-hide="profilePictureFile != null" ngf-drop ng-model="profilePictureFile" style="background: #F8F8F8; border: 5px dashed #DDD; height: 150px; width: 150px; border-radius: 75px; -webkit-border-radius: 75px; -moz-border-radius: 75px; text-align: center; padding: 50px 10px;" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-fix-orientation="true">Déposer une image <u>CARRE</u> ici</div>
+            <img id="profilePicture" ng-show="profilePictureFile != null" style="width: 150px; height: 150px; position: relative; overflow: hidden; border-radius: 50%;" ng-src="{{currentAssociation.profilePictureUrl}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label"></label>
+          <div class="col-sm-10">
+            <div ng-hide="profilePictureFile != null" class="btn btn-success" ng-model="profilePictureFile" ngf-select="upload($profilePictureFile)" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-fix-orientation="true">Selectionner</div>
+            <div ng-show="profilePictureFile != null" class="btn btn-danger" ng-click="removeProfilePicture()">Supprimer</div>
+          </div>
+        </div>
+        <div class="form-group" ng-show="palette != null">
+          <label class="col-sm-2 control-label">Couleur</label>
+          <div class="col-sm-10">
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[0][0]+', '+palette[0][1]+', '+palette[0][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'0px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(0);" ng-checked="currentAssociation.selectedcolor == 0">
+            </div>
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[1][0]+', '+palette[1][1]+', '+palette[1][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'20px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(1);" ng-checked="currentAssociation.selectedcolor == 1">
+            </div>
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[2][0]+', '+palette[2][1]+', '+palette[2][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'20px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(2);" ng-checked="currentAssociation.selectedcolor == 2">
+            </div>
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[3][0]+', '+palette[3][1]+', '+palette[3][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'20px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(3);" ng-checked="currentAssociation.selectedcolor == 3">
+            </div>
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[4][0]+', '+palette[4][1]+', '+palette[4][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'20px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(4);" ng-checked="currentAssociation.selectedcolor == 4">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+           <label class="col-sm-2 control-label">Nom ({{ 15 - currentAssociation.name.length }})</label>
+           <div class="col-sm-10">
+             <input type="text" ng-model="currentAssociation.name" ng-change="monitorLength('name', 15)" class="form-control">
+           </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Description ({{ 500 - currentAssociation.description.length }})</label>
+          <div class="col-sm-10">
+            <textarea ng-model="currentAssociation.description" ng-change="monitorLength('description', 500)" rows="3" class="form-control"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label"></label>
+          <div class="col-sm-10">
+            <button class="btn btn-info" type="submit" ng-disabled="form.$invalid">Modifier</button>
+          </div>
+        </div>
+      </form>
+  </div>

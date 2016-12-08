@@ -1,0 +1,111 @@
+
+  <div ng-controller="CreateEvent">
+      <form class="form-horizontal col-md-6" name="form" ng-submit="createEvent(form.$valid)" novalidate>
+        <h1 style="padding:10px;">{{ currentEvent.name }}</h1>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Image</label>
+          <div class="col-sm-10">
+            <div ng-hide="eventImageFile" ngf-drop ng-model="eventImageFile" style="background: #F8F8F8; border: 5px dashed #DDD; width: 300px; text-align: center; padding: 50px 10px;" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-fix-orientation="true">Déposer une image ici</div>
+            <img id="eventImage" ng-show="eventImageFile" class="img-rounded" height="300">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label"></label>
+          <div class="col-sm-10">
+            <div ng-hide="eventImageFile" class="btn btn-success" ng-model="eventImageFile" ngf-select="upload($eventImageFile)" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-fix-orientation="true">Selectionner</div>
+            <div ng-show="eventImageFile" class="btn btn-danger" ng-click="removeFile()">Supprimer</div>
+          </div>
+        </div>
+        <div class="form-group" ng-show="palette">
+          <label class="col-sm-2 control-label">Couleur</label>
+          <div class="col-sm-10">
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[0][0]+', '+palette[0][1]+', '+palette[0][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'0px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(0);" checked>
+            </div>
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[1][0]+', '+palette[1][1]+', '+palette[1][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'20px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(1);">
+            </div>
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[2][0]+', '+palette[2][1]+', '+palette[2][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'20px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(2);">
+            </div>
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[3][0]+', '+palette[3][1]+', '+palette[3][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'20px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(3);">
+            </div>
+            <div class="form-group" ng-style="{'background-color': 'rgb('+palette[4][0]+', '+palette[4][1]+', '+palette[4][2]+')','height':'40px', 'width':'80px', 'display':'inline-block', 'margin-left':'20px'}">
+              <input type="radio" name="color" style="margin-top: 13px; margin-left:33px" ng-click="selectColor(4);">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+           <label class="col-sm-2 control-label">Nom ({{ 20 - currentEvent.name.length }})</label>
+           <div class="col-sm-10">
+             <input type="text" ng-model="currentEvent.name" ng-change="monitorLength('name', 20)" class="form-control" required>
+           </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" ng-maxlength="2000">Description ({{ 2000 - currentEvent.description.length }})</label>
+          <div class="col-sm-10">
+            <textarea ng-model="currentEvent.description" ng-change="monitorLength('description', 2000)" ows="3" class="form-control" required></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Début</label>
+          <div class="col-sm-10">
+            <fieldset disabled>
+              <input type="text" class="form-control" placeholder="{{ currentEvent.dateStart | date:'yyyy-MM-dd HH:mm' }}">
+            </fieldset>
+            <datetimepicker data-ng-model="currentEvent.dateStart"></datetimepicker>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Fin</label>
+          <div class="col-sm-10">
+            <fieldset disabled>
+              <input type="text" class="form-control" placeholder="{{ currentEvent.dateEnd | date:'yyyy-MM-dd HH:mm' }}">
+            </fieldset>
+            <datetimepicker data-ng-model="currentEvent.dateEnd"></datetimepicker>
+          </div>
+        </div>
+        <!-- <div class="form-group">
+          <label class="col-sm-2 control-label">Réglages</label>
+          <div class="col-sm-10">
+            <input type="button" ng-click="showAdvancedSettings = !showAdvancedSettings" ng-show="!showAdvancedSettings" value="Afficher les réglages avancés"/>
+            <input type="button" ng-click="showAdvancedSettings = !showAdvancedSettings" ng-show="showAdvancedSettings" value="Masquer les réglages avancés"/>
+          </div>
+        </div>
+        <div class="form-group" ng-show="showAdvancedSettings">
+          <label class="col-sm-2 control-label">Promotion</label>
+          <div class="col-sm-10">
+            <p><input type="checkbox" name="1STPI" value="1STPI" ng-model="promotions['1stpi']"/> 1STPI<p/>
+            <p><input type="checkbox" name="2STPI" value="2STPI" ng-model="promotions['2stpi']"/> 2STPI<p/>
+            <p><input type="checkbox" name="EII" value="EII" ng-model="promotions['eii']"/> EII<p/>
+            <p><input type="checkbox" name="GM" value="GM" ng-model="promotions['gm']"/> GM<p/>
+            <p><input type="checkbox" name="GMA" value="GMA" ng-model="promotions['gma']"/> GMA<p/>
+            <p><input type="checkbox" name="GCU" value="GCU" ng-model="promotions['gcu']"/> GCU<p/>
+            <p><input type="checkbox" name="INFO" value="INFO" ng-model="promotions['info']"/> INFO<p/>
+            <p><input type="checkbox" name="SGM" value="SGM" ng-model="promotions['sgm']"/> SGM<p/>
+            <p><input type="checkbox" name="SRC" value="SRC" ng-model="promotions['src']"/> SRC<p/>
+            <p><input type="checkbox" name="Personnel/Enseignant" value="Personnel/Enseignant" ng-model="promotions['personnel']"/> Personnel/Enseignant<p/>
+            <p><input type="checkbox" name="Inconnu" value="" ng-model="promotions['other']"/> Inconnu<p/>
+            <br/>
+            <input type="button" ng-click="selectAllPromo(true)" value="Tout sélectionner"/>
+            <input type="button" ng-click="selectAllPromo(false)" value="Tout désélectionner"/>
+          </div>
+        </div>
+
+        <div class="form-group" ng-show="showAdvancedSettings">
+          <label class="col-sm-2 control-label">Plateforme</label>
+          <div class="col-sm-10">
+            <p><input type="checkbox" name="android" value="android" ng-model="plateforms['android']"/> Android</p>
+            <p><input type="checkbox" name="ios" value="ios" ng-model="plateforms['iOS']"/> iOS</p>
+          </div>
+        </div> -->
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label"></label>
+          <div class="col-sm-10">
+            <button class="btn btn-success" type="submit" ng-disabled="form.$invalid || !eventImageFile || !currentEvent.dateEnd || !currentEvent.dateStart">Valider</button>
+          </div>
+        </div>
+      </form>
+  </div>

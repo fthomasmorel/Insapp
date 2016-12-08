@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html ng-app="insapp">
+<head>
+  <title>Insapp</title>
+  <meta charset="UTF-8">
+
+  <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular.js"></script>
+  <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-resource.js"></script>
+  <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-route.js"></script>
+  <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-cookies.min.js"></script>
+  <script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-animate.js"></script>
+  <script src="bower_components/angular-spinkit/build/angular-spinkit.min.js"></script>
+
+  <script charset="UTF-8" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script charset="UTF-8" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  <script charset="UTF-8" src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script> <!-- for no html5 browsers support -->
+  <script charset="UTF-8" src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+  <script charset="UTF-8" src="node_modules/ng-dialog/js/ngDialog.min.js"></script>
+
+  <script charset="UTF-8" type="text/javascript" src="node_modules/moment/moment.js"></script>
+  <script charset="UTF-8" type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+  <script charset="UTF-8" type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
+  <script charset="UTF-8" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+  <script charset="UTF-8" type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
+
+  <script charset="UTF-8" type="text/javascript" src="bower_components/ng-loading-overlay/src/ng-loading-overlay.js "></script>
+  <script charset="UTF-8" type="text/javascript" src="js/ui-bootstrap-tpls-1.2.5.min.js"></script>
+
+  <script charset="UTF-8" src ="app.config.js"></script>
+  <script charset="UTF-8" src ="app.js"></script>
+  <script charset="UTF-8" src="js/login.js"></script>
+  <script charset="UTF-8" src="js/logout.js"></script>
+  <script charset="UTF-8" src="js/navigation.js"></script>
+  <script charset="UTF-8" src="js/myEvents.js"></script>
+  <script charset="UTF-8" src="js/myPosts.js"></script>
+  <script charset="UTF-8" src="js/myEventReader.js"></script>
+  <script charset="UTF-8" src="js/myPostsReader.js"></script>
+  <script charset="UTF-8" src="js/myAssociation.js"></script>
+  <script charset="UTF-8" src="js/createEvent.js"></script>
+  <script charset="UTF-8" src="js/createPost.js"></script>
+  <script charset="UTF-8" src="js/createAssociation.js"></script>
+  <script charset="UTF-8" src="js/users.js"></script>
+  <script charset="UTF-8" src="js/validationEvent.js"></script>
+  <script charset="UTF-8" src="js/validationPost.js"></script>
+  <script charset="UTF-8" src="js/validationAssociation.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
+  <link rel="stylesheet" href="node_modules/ng-dialog/css/ngDialog.min.css"/>
+  <link rel="stylesheet" href="node_modules/ng-dialog/css/ngDialog.css">
+  <link rel="stylesheet" href="node_modules/ng-dialog/css/ngDialog-theme-default.css">
+  <link rel="stylesheet" href="node_modules/ng-dialog/css/ngDialog-theme-plain.css">
+  <link rel="stylesheet" href="node_modules/ng-dialog/css/ngDialog-custom-width.css">
+  <link rel="stylesheet" href="bower_components/angular-spinkit/build/angular-spinkit.min.css">
+
+  <base href="/">
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="NavigationController">
+    <div class="container-fluid">
+      <div class = "navbar-header">
+      <button type = "button" class = "navbar-toggle"
+         data-toggle = "collapse" data-target = "#example-navbar-collapse">
+         <span class = "sr-only">Toggle navigation</span>
+         <span class = "icon-bar"></span>
+         <span class = "icon-bar"></span>
+         <span class = "icon-bar"></span>
+      </button>
+      <a class = "navbar-brand" href = "{{ baseUrl }}/#/myEvents">Insapp</a>
+      </div>
+      <div class = "collapse navbar-collapse" id = "example-navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li ng-class="{ active: isActive('/myEvents')}" ng-show="loggedIn" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/myEvents">Mes événements</a></li>
+          <li ng-class="{ active: isActive('/myPosts')}" ng-show="loggedIn" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/myPosts">Mes posts</a></li>
+          <li ng-class="{ active: isActive('/myAssociation')}" ng-show="loggedIn" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/myAssociation/me">Mon association</a></li>
+          <li ng-class="{ active: isActive('/users')}" ng-show="master" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/users">Utilisateurs</a></li>
+          <li ng-class="{ active: isActive('/validation')}" ng-show="master" ng-click="isLoggedIn()"class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Validation<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li ng-show="master" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/validationAssociation">Associations</a></li>
+                <li ng-show="master" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/validationEvent">Event</a></li>
+                <li ng-show="master" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/validationPost">Posts</a></li>
+              </ul>
+            </li>
+          <li ng-class="{ active: isActive('/createAssociation')}" ng-show="master" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/createAssociation">Créer une association</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li ng-show="loggedIn" ng-click="isLoggedIn()"><a href="{{ baseUrl }}/#/logout"><span class="glyphicon glyphicon-log-out"></span>Log out</a></li>
+        </ul>
+      </div>
+    </div>
+    </nav>
+    <div style="padding-top:50px;" ng-view></div>
+</body>
+</html>

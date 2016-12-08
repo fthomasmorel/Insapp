@@ -1,0 +1,22 @@
+
+  <div ng-controller="MyPosts"style="padding:30px">
+    <a href="{{ baseUrl + '/#/createPost' }}"><button class="btn btn-success" style="margin-bottom:10px" ng-show="isAllSetUp">Créer un post</button></a>
+    </br>
+    <input type="text" style="margin-bottom:10px" placeholder="Rechercher" search ng-show="allPosts.length > 0 && isAllSetUp">
+    <table class="table table-striped table-hover" ng-show="myPosts.length > 0">
+      <tr>
+        <th>Nom</th>
+        <th>Date</th>
+        <th>Likes</th>
+        <th>Commentaires</th>
+      </tr>
+      <tr ng-repeat="post in myPosts" ng-click='onclick(post)'>
+        <td style="vertical-align: middle"> {{ post.title }} </td>
+        <td style="vertical-align: middle"> {{ post.date | date:'yyyy-MM-dd HH:mm' }} </td>
+        <td style="vertical-align: middle"> {{ post.nbLikes }} </td>
+        <td style="vertical-align: middle"> {{ post.nbComments }} </td>
+      </tr>
+    </table>
+    <h2 ng-show="allPosts.length == 0 && isAllSetUp" style="text-align:center;color:#AAAAAA">Il n'y a aucun Post, créez en un vite ;)</h2>
+    <h2 ng-show="!isAllSetUp" style="text-align:center;color:#AAAAAA">Customise d'abord ta page association avant de créer un post :) </h2>
+  </div>

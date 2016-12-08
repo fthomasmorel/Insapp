@@ -1,0 +1,24 @@
+
+  <div ng-controller="Users"style="padding:30px">
+    <input type="text" style="margin-bottom:10px" placeholder="Rechercher" search ng-show="allUsers.length > 0">
+
+    <p ng-show="allUsers.length > 0" style="color: #AAAAAA;">{{ users.length }} utilisateurs</p>
+
+    <table class="table table-striped table-hover" ng-show="users.length > 0">
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Nom</th>
+        <th>Promotion</th>
+        <th>Action</th>
+      </tr>
+      <tr ng-repeat="user in users">
+        <td style="vertical-align: middle"> {{ user.ID }} </td>
+        <td style="vertical-align: middle"> {{ user.username }} </td>
+        <td style="vertical-align: middle"> {{ user.name}} </td>
+        <td style="vertical-align: middle"> {{ user.promotion }} </td>
+        <td style="vertical-align: middle"> <button class="btn btn-danger" ng-click='delete(user)'>Supprimer</button> </td>
+      </tr>
+    </table>
+    <h2 ng-show="allPosts.length == 0" style="text-align:center;color:#AAAAAA">Chargement</h2>
+  </div>

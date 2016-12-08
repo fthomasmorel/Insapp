@@ -1,0 +1,40 @@
+
+  <div ng-controller="MyEvents" style="padding:30px">
+    <a href="{{ baseUrl + '/#/createEvent' }}"><button class="btn btn-success" style="margin-bottom:10px" ng-show="isAllSetUp">Créer un événément</button></a>
+    </br>
+    <input type="text" style="margin-bottom:10px" placeholder="Rechercher" search ng-show="(allEvents.length > 0 || allPastEvents.length > 0) && isAllSetUp">
+    <h3 ng-show="myEvents.length > 0">Évènements à venir</h3>
+    <table class="table table-striped table-hover" ng-show="myEvents.length > 0">
+      <tr>
+        <th>Nom</th>
+        <th>Début</th>
+        <th>Fin</th>
+        <th>Participants</th>
+      </tr>
+      <tr ng-repeat="event in myEvents" ng-click='onclick(event)'>
+        <td style="vertical-align: middle"> {{ event.name }} </td>
+        <td style="vertical-align: middle"> {{ event.dateStart | date:'yyyy-MM-dd HH:mm' }} </td>
+        <td style="vertical-align: middle"> {{ event.dateEnd | date:'yyyy-MM-dd HH:mm' }} </td>
+        <td style="vertical-align: middle"> {{ event.nbParticipant }} </td>
+      </tr>
+    </div>
+    <h2 ng-show="allEvents.length == 0 && isAllSetUp" style="text-align:center;color:#AAAAAA">Il n'y a aucun événément à venir, créez en un :)</h2>
+    <h2 ng-show="!isAllSetUp" style="text-align:center;color:#AAAAAA">Customise d'abord ta page association avant de créer un event :) </h2>
+    </table>
+    <h3 ng-show="pastEvents.length > 0">Évènements passés</h3>
+    <table class="table table-striped table-hover" ng-show="pastEvents.length > 0 && isAllSetUp">
+      <tr>
+        <th>Nom</th>
+        <th>Début</th>
+        <th>Fin</th>
+        <th>Participants</th>
+      </tr>
+      <tr ng-repeat="event in pastEvents" ng-click='onclick(event)'>
+        <td style="vertical-align: middle"> {{ event.name }} </td>
+        <td style="vertical-align: middle"> {{ event.dateStart | date:'yyyy-MM-dd HH:mm' }} </td>
+        <td style="vertical-align: middle"> {{ event.dateEnd | date:'yyyy-MM-dd HH:mm' }} </td>
+        <td style="vertical-align: middle"> {{ event.nbParticipant }} </td>
+      </tr>
+    </div>
+    </table>
+  </div>
