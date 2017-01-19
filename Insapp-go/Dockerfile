@@ -10,9 +10,7 @@ RUN wget https://bootstrap.pypa.io/get-pip.py
 RUN python2.7 get-pip.py
 RUN pip install colorthief
 
-RUN apt-get udpate ; apt-get install uuid-runtime
-
-RUN ls /go/src/app
+RUN apt-get update ; apt-get install uuid-runtime
 
 EXPOSE 9000
 
