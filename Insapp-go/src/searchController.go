@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -48,9 +47,9 @@ func SearchUniversalController(w http.ResponseWriter, r *http.Request) {
 	var search Search
 	decoder.Decode(&search)
 
-    users := SearchUser(search.Terms)[0:30]
-    posts := SearchPost(search.Terms)[0:30]
-    events := SearchEvent(search.Terms)[0:30]
-	assos := SearchAssociation(search.Terms)[0:30]
+    users := SearchUser(search.Terms)
+    posts := SearchPost(search.Terms)
+    events := SearchEvent(search.Terms)
+	assos := SearchAssociation(search.Terms)
 	json.NewEncoder(w).Encode(bson.M{"associations": assos, "users": users, "posts": posts, "events": events})
 }
