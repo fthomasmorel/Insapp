@@ -59,7 +59,7 @@ func AddPostController(w http.ResponseWriter, r *http.Request) {
 	res := AddPost(post)
 	asso := GetAssociation(post.Association)
 	json.NewEncoder(w).Encode(res)
-	go TriggerNotificationForPost(asso.ID, res.ID, "@" + strings.ToLower(asso.Name) + " a posté une nouvelle news 📰")
+	go TriggerNotificationForPost(post, asso.ID, res.ID, "@" + strings.ToLower(asso.Name) + " a posté une nouvelle news 📰")
 }
 
 // UpdatePostController will answer the JSON of the
