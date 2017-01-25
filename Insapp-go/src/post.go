@@ -16,6 +16,8 @@ type Post struct {
 	Date        time.Time       `json:"date"`
 	Likes       []bson.ObjectId `json:"likes"`
 	Comments    Comments        `json:"comments"`
+    Promotions       []string        `json:"promotions"`
+    Plateforms       []string        `json:"plateforms"`
 	Image    		string          `json:"image"`
 	ImageSize		bson.M					`json:"imageSize"`
 }
@@ -51,6 +53,8 @@ func UpdatePost(id bson.ObjectId, post Post) Post {
 		"title"				:	post.Title,
 		"description"	:	post.Description,
 		"image"				:	post.Image,
+        "plateforms"		:	post.Plateforms,
+        "promotions"		:	post.Promotions,
 		"imageSize"		:	post.ImageSize,
 	}}
 	db.Update(postID, change)

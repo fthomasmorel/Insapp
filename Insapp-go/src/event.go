@@ -20,6 +20,8 @@ type Event struct {
 	DateStart    	time.Time       `json:"dateStart"`
 	DateEnd      	time.Time       `json:"dateEnd"`
 	Image     	 	string          `json:"image"`
+    Promotions       []string        `json:"promotions"`
+    Plateforms       []string        `json:"plateforms"`
 	BgColor      	string          `json:"bgColor"`
 	FgColor      	string          `json:"fgColor"`
 }
@@ -84,6 +86,8 @@ func UpdateEvent(id bson.ObjectId, event Event) Event {
 		"selectedcolor"	:	event.SelectedColor,
 		"datestart"			:	event.DateStart,
 		"dateend"				:	event.DateEnd,
+        "plateforms"			:	event.Plateforms,
+        "promotions"			:	event.Promotions,
 		"bgcolor"				:	event.BgColor,
 		"fgcolor"				: event.FgColor,
 	}}

@@ -11,35 +11,35 @@ app.controller('CreatePost', ['$scope', '$resource', '$routeParams', 'fileUpload
 
   String.prototype.isPromotion = function(str){
     var lastIndex = this.lastIndexOf(str);
-    return (lastIndex == 0 && str.length == this.length-1)|| (lastIndex == 0 && str.length == this.length)
+    return (lastIndex == 1 && str.length == this.length-1)|| (lastIndex == 0 && str.length == this.length)
   }
 
   $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Sans Promotion"]
   $scope.showAdvancedSettings = false
   $scope.promotions = {
-    "STPI1": true,
-    "STPI2": true,
-    "EII3": true,
-    "EII4": true,
-    "EII5": true,
-    "GM3": true,
-    "GM4": true,
-    "GM5": true,
-    "GMA3": true,
-    "GMA4": true,
-    "GMA5": true,
-    "GCU3": true,
-    "GCU4": true,
-    "GCU5": true,
-    "INFO3": true,
-    "INFO4": true,
-    "INFO5": true,
-    "SGM3": true,
-    "SGM4": true,
-    "SGM5": true,
-    "SRC3": true,
-    "SRC4": true,
-    "SRC5": true,
+    "1STPI": true,
+    "2STPI": true,
+    "3EII": true,
+    "4EII": true,
+    "5EII": true,
+    "3GM": true,
+    "4GM": true,
+    "5GM": true,
+    "3GMA": true,
+    "4GMA": true,
+    "5GMA": true,
+    "3GCU": true,
+    "4GCU": true,
+    "5GCU": true,
+    "3INFO": true,
+    "4INFO": true,
+    "5INFO": true,
+    "3SGM": true,
+    "4SGM": true,
+    "5SGM": true,
+    "3SRC": true,
+    "4SRC": true,
+    "5SRC": true,
     "Personnel/Enseignant": true,
     "Sans Promotion": true,
   }
