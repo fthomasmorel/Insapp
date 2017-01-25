@@ -6,6 +6,7 @@ import (
   "gopkg.in/mgo.v2"
   "gopkg.in/mgo.v2/bson"
   "fmt"
+  "strings"
   "net/http"
   "bytes"
 )
@@ -62,20 +63,56 @@ func TriggerNotificationForUser(sender bson.ObjectId, receiver bson.ObjectId, co
   }
 }
 
-func TriggerNotificationForEvent(sender bson.ObjectId, content bson.ObjectId, message string){
+func TriggerNotificationForEvent(event Event, sender bson.ObjectId, content bson.ObjectId, message string){
   notification := Notification{Sender: sender, Content: content, Message: message, Type: "event"}
   iOSUsers := getiOSUsers("")
+  users := []NotificationUser{}
+  for _, notificationUser := range iOSUsers {
+    var user = GetUser(notificationUser.UserId)
+    if Contains(strings.ToUpper(user.Promotion), event.Promotions) {
+        users = append(users, notificationUser)
+    }
+  }
+  if Contains("iOS", event.Plateforms) {
+      triggeriOSNotification(notification, users)
+  }
   androidUsers := getAndroidUsers("")
-  triggeriOSNotification(notification, iOSUsers)
-  triggerAndroidNotification(notification, androidUsers)
+  users = []NotificationUser{}
+  for _, notificationUser := range androidUsers {
+    var user = GetUser(notificationUser.UserId)
+    if Contains(strings.ToUpper(user.Promotion), event.Promotions) {
+        users = append(users, notificationUser)
+    }
+  }
+  if Contains("android", event.Plateforms) {
+      triggerAndroidNotification(notification, androidUsers)
+  }
 }
 
-func TriggerNotificationForPost(sender bson.ObjectId, content bson.ObjectId, message string){
+func TriggerNotificationForPost(post Post, sender bson.ObjectId, content bson.ObjectId, message string){
   notification := Notification{Sender: sender, Content: content, Message: message, Type: "post"}
   iOSUsers := getiOSUsers("")
+  users := []NotificationUser{}
+  for _, notificationUser := range iOSUsers {
+    var user = GetUser(notificationUser.UserId)
+    if Contains(strings.ToUpper(user.Promotion), post.Promotions) {
+        users = append(users, notificationUser)
+    }
+  }
+  if Contains("iOS", post.Plateforms) {
+      triggeriOSNotification(notification, users)
+  }
   androidUsers := getAndroidUsers("")
-  triggeriOSNotification(notification, iOSUsers)
-  triggerAndroidNotification(notification, androidUsers)
+  users = []NotificationUser{}
+  for _, notificationUser := range androidUsers {
+    var user = GetUser(notificationUser.UserId)
+    if Contains(strings.ToUpper(user.Promotion), post.Promotions) {
+        users = append(users, notificationUser)
+    }
+  }
+  if Contains("android", post.Plateforms) {
+      triggerAndroidNotification(notification, androidUsers)
+  }
 }
 
 func triggerAndroidNotification(notification Notification, users []NotificationUser){
