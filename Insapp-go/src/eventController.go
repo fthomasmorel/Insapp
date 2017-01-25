@@ -22,7 +22,20 @@ func GetEventController(w http.ResponseWriter, r *http.Request) {
 // GetFutureEventsController will answer a JSON
 // containing all future events from "NOW"
 func GetFutureEventsController(w http.ResponseWriter, r *http.Request) {
-	var res = GetFutureEvents()
+    userId := GetUserFromRequest(r)
+    user := GetUser(bson.ObjectIdHex(userId))
+    os := GetNotificationUserForUser(bson.ObjectIdHex(userId)).Os
+    events := GetFutureEvents()
+    res := Events{}
+    if user.ID != "" {
+        for _, event := range(events){
+            if Contains(strings.ToUpper(user.Promotion), event.Promotions) && (Contains(os, event.Plateforms) || os == "") || len(event.Promotions) == 0 || len(event.Plateforms) == 0 {
+                res = append(res, event)
+            }
+        }
+    }else{
+        res = events
+    }
 	json.NewEncoder(w).Encode(res)
 }
 

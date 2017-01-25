@@ -47,23 +47,23 @@
               <tr ng-repeat="promo in promotionNames">
                 <td style="vertical-align: middle" ><a ng-click="select(promo)">Tous<a/>/<a ng-click="deselect(promo)">Aucun<a/></td>
                 <td style="vertical-align: middle" ng-show="promo != 'STPI' && promo != 'Personnel/Enseignant' && promo != 'Sans Promotion'">
-                    <input id="3{{ promo }}" type="checkbox" ng-model="promotions[promo+'3']"/>
+                    <input id="3{{ promo }}" type="checkbox" ng-model="promotions['3'+promo]"/>
                     3{{ promo }}
                 </td>
                 <td style="vertical-align: middle" ng-show="promo != 'STPI' && promo != 'Personnel/Enseignant' && promo != 'Sans Promotion'">
-                    <input id="4{{ promo }}" type="checkbox" ng-model="promotions[promo+'4']"/>
+                    <input id="4{{ promo }}" type="checkbox" ng-model="promotions['4'+promo]"/>
                     4{{ promo }}
                 </td>
                 <td style="vertical-align: middle" ng-show="promo != 'STPI' && promo != 'Personnel/Enseignant' && promo != 'Sans Promotion'">
-                    <input id="5{{ promo }}" type="checkbox" ng-model="promotions[promo+'5']"/>
+                    <input id="5{{ promo }}" type="checkbox" ng-model="promotions['5'+promo]"/>
                     5{{ promo }}
                 </td>
                 <td colspan="1" style="vertical-align: middle" ng-show="promo == 'STPI'">
-                    <input id="1{{ promo }}" type="checkbox" ng-model="promotions[promo+'1']"/>
+                    <input id="1{{ promo }}" type="checkbox" ng-model="promotions['1'+promo]"/>
                     1{{ promo }}
                 </td>
                 <td colspan="2" style="vertical-align: middle" ng-show="promo == 'STPI'">
-                    <input id="2{{ promo }}" type="checkbox" ng-model="promotions[promo+'2']"/>
+                    <input id="2{{ promo }}" type="checkbox" ng-model="promotions['2'+promo]"/>
                     2{{ promo }}
                 </td>
                 <td colspan="3" style="vertical-align: middle" ng-show="promo == 'Personnel/Enseignant' || promo == 'Sans Promotion'">

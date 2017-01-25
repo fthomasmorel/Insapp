@@ -24,7 +24,20 @@ func GetPostController(w http.ResponseWriter, r *http.Request) {
 // GetLastestPostsController will answer a JSON of the
 // N lastest post. Here N = 50.
 func GetLastestPostsController(w http.ResponseWriter, r *http.Request) {
-	var res = GetLastestPosts(50)
+    userId := GetUserFromRequest(r)
+    user := GetUser(bson.ObjectIdHex(userId))
+    os := GetNotificationUserForUser(bson.ObjectIdHex(userId)).Os
+    posts := GetLastestPosts(50)
+    res := Posts{}
+    if user.ID != "" {
+        for _, post := range(posts){
+            if Contains(strings.ToUpper(user.Promotion), post.Promotions) && (Contains(os, post.Plateforms) || os == "") || len(post.Promotions) == 0 || len(post.Plateforms) == 0 {
+                res = append(res, post)
+            }
+        }
+    }else{
+        res = posts
+    }
 	json.NewEncoder(w).Encode(res)
 }
 
