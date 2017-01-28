@@ -231,7 +231,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
         return $scope.plateforms[plateform]
       })
 
-      if ($scope.currentEvent.plateforms.length == 0 || $scope.currentEvent.promotions == 0) {
+      if ($scope.currentEvent.plateforms.length == 0 || $scope.currentEvent.promotions.length == 0) {
           ngDialog.open({
               template: "<h2 style='text-align:center;'>Choisis au moins 1 promotion et 1 plateforme</h2>",
               plain: true,

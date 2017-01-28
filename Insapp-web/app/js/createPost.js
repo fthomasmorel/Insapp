@@ -179,7 +179,7 @@ app.controller('CreatePost', ['$scope', '$resource', '$routeParams', 'fileUpload
     })
 
 
-    if ($scope.currentPost.plateforms.length == 0 || $scope.currentPost.promotions == 0) {
+    if ($scope.currentPost.plateforms.length == 0 || $scope.currentPost.promotions.length == 0) {
         ngDialog.open({
             template: "<h2 style='text-align:center;'>Choisis au moins 1 promotion et 1 plateforme</h2>",
             plain: true,
