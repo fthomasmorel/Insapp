@@ -127,11 +127,17 @@ var userRoutes = Routes{
 	Route{"GetUser", "GET", "/user/{id}", GetUserController},
 	Route{"UpdateUser", "PUT", "/user/{id}", UpdateUserController},
 	Route{"DeleteUser", "DELETE", "/user/{id}", DeleteUserController},
-	Route{"SearchUser", "GET", "/search/users/{username}", SearchUserController},
 	Route{"ReportUser", "PUT", "/report/user/{id}", ReportUserController},
 
 	//NOTIFICATION
 	Route{"Notification", "POST", "/notification", UpdateNotificationUserController},
 	Route{"Notification", "GET", "/notification/{userID}", GetNotificationController},
 	Route{"Notification", "DELETE", "/notification/{userID}/{id}", DeleteNotificationController},
+
+	//SEARCH
+	Route{"SearchUser", "POST", "/search/users", SearchUserController},
+	Route{"SearchAssociation", "POST", "/search/associations", SearchAssociationController},
+	Route{"SearchEvent", "POST", "/search/events", SearchEventController},
+	Route{"SearchPost", "POST", "/search/posts", SearchPostController},
+	Route{"SearchUniversal", "POST", "/search", SearchUniversalController},
 }

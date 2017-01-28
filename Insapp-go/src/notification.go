@@ -19,16 +19,26 @@ type Notification struct {
 	ID          bson.ObjectId   `bson:"_id,omitempty"`
 	Sender      bson.ObjectId   `json:"sender"`
 	Receiver    bson.ObjectId   `json:"receiver"`
-	Content			bson.ObjectId		`json:"content"`
-	Comment			Comment					`json:"comment,omitempty" bson:",omitempty"`
-	Message			string					`json:"message"`
-	Seen				bool						`json:"seen"`
-	Date				time.Time				`json:"date"`
-	Type				string					`json:"type"`
+	Content		bson.ObjectId	`json:"content"`
+	Comment		Comment			`json:"comment,omitempty" bson:",omitempty"`
+	Message		string			`json:"message"`
+	Seen		bool			`json:"seen"`
+	Date		time.Time		`json:"date"`
+	Type		string			`json:"type"`
 }
 
 type Notifications []Notification
 
+func GetNotificationUserForUser(userID bson.ObjectId) NotificationUser {
+	conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("insapp").C("notification_user")
+	var result NotificationUser
+	db.Find(bson.M{"userid" : userID}).One(&result)
+	return result
+}
 
 func CreateOrUpdateNotificationUser(user NotificationUser){
     if len(user.Token) == 0 { return }

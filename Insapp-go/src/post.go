@@ -16,6 +16,8 @@ type Post struct {
 	Date        time.Time       `json:"date"`
 	Likes       []bson.ObjectId `json:"likes"`
 	Comments    Comments        `json:"comments"`
+    Promotions       []string        `json:"promotions"`
+    Plateforms       []string        `json:"plateforms"`
 	Image    		string          `json:"image"`
 	ImageSize		bson.M					`json:"imageSize"`
 }
@@ -51,6 +53,8 @@ func UpdatePost(id bson.ObjectId, post Post) Post {
 		"title"				:	post.Title,
 		"description"	:	post.Description,
 		"image"				:	post.Image,
+        "plateforms"		:	post.Plateforms,
+        "promotions"		:	post.Promotions,
 		"imageSize"		:	post.ImageSize,
 	}}
 	db.Update(postID, change)
@@ -101,10 +105,22 @@ func GetLastestPosts(number int) Posts {
 	return result
 }
 
+func SearchPost(name string) Posts {
+    conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("insapp").C("post")
+	var result Posts
+	db.Find(bson.M{"$or" : []interface{}{
+		bson.M{"title" : bson.M{ "$regex" : bson.RegEx{`^.*` + name + `.*`, "i"}}}, bson.M{"description" : bson.M{ "$regex" : bson.RegEx{`^.*` + name + `.*`, "i"}}}}}).All(&result)
+	return result
+}
+
 // LikePostWithUser will add the user to the list of
 // user that liked the post (cf. Likes field)
 func LikePostWithUser(id bson.ObjectId, userID bson.ObjectId) (Post, User) {
-	conf, _ := Configuration()
+    conf, _ := Configuration()
     session, _ := mgo.Dial(conf.Database)
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)

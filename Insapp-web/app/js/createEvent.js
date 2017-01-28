@@ -5,20 +5,39 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
     $location.path('/login')
   }
 
-  $scope.showAdvancedSettings = false
+  String.prototype.isPromotion = function(str){
+    var lastIndex = this.lastIndexOf(str);
+    return (lastIndex == 1 && str.length == this.length-1)|| (lastIndex == 0 && str.length == this.length)
+  }
 
+  $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Sans Promotion"]
+  $scope.showAdvancedSettings = false
   $scope.promotions = {
-    "1stpi": true,
-    "2stpi": true,
-    "eii": true,
-    "gm": true,
-    "gma": true,
-    "gcu": true,
-    "info": true,
-    "sgm": true,
-    "src": true,
-    "personnel": true,
-    "other": true,
+    "1STPI": true,
+    "2STPI": true,
+    "3EII": true,
+    "4EII": true,
+    "5EII": true,
+    "3GM": true,
+    "4GM": true,
+    "5GM": true,
+    "3GMA": true,
+    "4GMA": true,
+    "5GMA": true,
+    "3GCU": true,
+    "4GCU": true,
+    "5GCU": true,
+    "3INFO": true,
+    "4INFO": true,
+    "5INFO": true,
+    "3SGM": true,
+    "4SGM": true,
+    "5SGM": true,
+    "3SRC": true,
+    "4SRC": true,
+    "5SRC": true,
+    "Personnel/Enseignant": true,
+    "Sans Promotion": true,
   }
 
   $scope.plateforms = {
@@ -123,15 +142,47 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
     });
   }
 
+  $scope.select = function(promotion){
+      Object.keys($scope.promotions).forEach(function (key) {
+          if (key.isPromotion(promotion)) {
+              $scope.promotions[key] = true
+          }
+      })
+  }
+
+  $scope.deselect = function(promotion){
+      Object.keys($scope.promotions).forEach(function (key) {
+          if (key.isPromotion(promotion)) {
+              $scope.promotions[key] = false
+          }
+      })
+  }
+
+  $scope.selectYear = function(year){
+      Object.keys($scope.promotions).forEach(function (key) {
+          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+              $scope.promotions[key] = true
+          }
+      })
+  }
+
+  $scope.deselectYear = function(year){
+      Object.keys($scope.promotions).forEach(function (key) {
+          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+              $scope.promotions[key] = false
+          }
+      })
+  }
+
   $scope.selectAllPromo = function(selected){
     Object.keys($scope.promotions).forEach(function (key) {
       $scope.promotions[key] = selected
     })
   }
 
-  $scope.selectAllPlatform = function(selected){
-    Object.keys($scope.plateforms).forEach(function (key) {
-      $scope.promotions[key] = selected
+  $scope.invertPromo = function(){
+    Object.keys($scope.promotions).forEach(function (key) {
+      $scope.promotions[key] = !$scope.promotions[key]
     })
   }
 
@@ -144,20 +195,22 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
     $scope.currentEvent.promotions = []
     for (i in promotions) {
       promotion = promotions[i]
-      if (!promotion.includes("stpi") && promotion != "other" && promotion != "personnel") {
-        $scope.currentEvent.promotions.push("3" + promotion.toUpperCase())
-        $scope.currentEvent.promotions.push("4" + promotion.toUpperCase())
-        $scope.currentEvent.promotions.push("5" + promotion.toUpperCase())
-      }else{
-        if (promotion == "other") $scope.currentEvent.promotions.push("")
-        else if (promotion == "personnel") $scope.currentEvent.promotions.push("Personnel/Enseignant")
-        else $scope.currentEvent.promotions.push(promotion.toUpperCase())
-      }
+      if (promotion == "Sans Promotion") $scope.currentEvent.promotions.push("")
+      else $scope.currentEvent.promotions.push(promotion.toUpperCase())
     }
 
     $scope.currentEvent.plateforms = Object.keys($scope.plateforms).filter(function(plateform){
       return $scope.plateforms[plateform]
     })
+
+    if ($scope.currentEvent.plateforms.length == 0 || $scope.currentEvent.promotions == 0) {
+        ngDialog.open({
+            template: "<h2 style='text-align:center;'>Choisis au moins 1 promotion et 1 plateforme</h2>",
+            plain: true,
+            className: 'ngdialog-theme-default'
+        });
+        return
+    }
 
     $loadingOverlay.show()
     $("html, body").animate({ scrollTop: 0 }, "slow");

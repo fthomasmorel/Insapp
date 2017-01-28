@@ -1,4 +1,8 @@
-./insapp-cdn
-./insapp-db
+./insapp-cdn/*
+./insapp-db/*
+
+insapp-cdn/*
+insapp-db/*
 
 ./Insapp-go/src/config.json
+./Insapp-web/app/app.config.js

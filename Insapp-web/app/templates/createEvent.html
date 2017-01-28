@@ -66,40 +66,63 @@
             <datetimepicker data-ng-model="currentEvent.dateEnd"></datetimepicker>
           </div>
         </div>
-        <!-- <div class="form-group">
+        <div class="form-group">
           <label class="col-sm-2 control-label">Réglages</label>
           <div class="col-sm-10">
             <input type="button" ng-click="showAdvancedSettings = !showAdvancedSettings" ng-show="!showAdvancedSettings" value="Afficher les réglages avancés"/>
             <input type="button" ng-click="showAdvancedSettings = !showAdvancedSettings" ng-show="showAdvancedSettings" value="Masquer les réglages avancés"/>
           </div>
         </div>
-        <div class="form-group" ng-show="showAdvancedSettings">
+        <div class="form-group" ng-show="showAdvancedSettings" style="margin-left:30px;">
           <label class="col-sm-2 control-label">Promotion</label>
-          <div class="col-sm-10">
-            <p><input type="checkbox" name="1STPI" value="1STPI" ng-model="promotions['1stpi']"/> 1STPI<p/>
-            <p><input type="checkbox" name="2STPI" value="2STPI" ng-model="promotions['2stpi']"/> 2STPI<p/>
-            <p><input type="checkbox" name="EII" value="EII" ng-model="promotions['eii']"/> EII<p/>
-            <p><input type="checkbox" name="GM" value="GM" ng-model="promotions['gm']"/> GM<p/>
-            <p><input type="checkbox" name="GMA" value="GMA" ng-model="promotions['gma']"/> GMA<p/>
-            <p><input type="checkbox" name="GCU" value="GCU" ng-model="promotions['gcu']"/> GCU<p/>
-            <p><input type="checkbox" name="INFO" value="INFO" ng-model="promotions['info']"/> INFO<p/>
-            <p><input type="checkbox" name="SGM" value="SGM" ng-model="promotions['sgm']"/> SGM<p/>
-            <p><input type="checkbox" name="SRC" value="SRC" ng-model="promotions['src']"/> SRC<p/>
-            <p><input type="checkbox" name="Personnel/Enseignant" value="Personnel/Enseignant" ng-model="promotions['personnel']"/> Personnel/Enseignant<p/>
-            <p><input type="checkbox" name="Inconnu" value="" ng-model="promotions['other']"/> Inconnu<p/>
-            <br/>
-            <input type="button" ng-click="selectAllPromo(true)" value="Tout sélectionner"/>
-            <input type="button" ng-click="selectAllPromo(false)" value="Tout désélectionner"/>
+          <table class="table table-striped table-hover">
+              <tr>
+                <td style="vertical-align: middle" ></td>
+                <td style="vertical-align: middle" ><a ng-click="selectYear(1)">Tous<a/>/<a ng-click="deselectYear(1)">Aucun<a/></td>
+                <td style="vertical-align: middle" ><a ng-click="selectYear(2)">Tous<a/>/<a ng-click="deselectYear(2)">Aucun<a/></td>
+                <td style="vertical-align: middle" ><a ng-click="selectYear(3)">Tous<a/>/<a ng-click="deselectYear(3)">Aucun<a/></td>
+              </tr>
+              <tr ng-repeat="promo in promotionNames">
+                <td style="vertical-align: middle" ><a ng-click="select(promo)">Tous<a/>/<a ng-click="deselect(promo)">Aucun<a/></td>
+                <td style="vertical-align: middle" ng-show="promo != 'STPI' && promo != 'Personnel/Enseignant' && promo != 'Sans Promotion'">
+                    <input id="3{{ promo }}" type="checkbox" ng-model="promotions['3'+promo]"/>
+                    3{{ promo }}
+                </td>
+                <td style="vertical-align: middle" ng-show="promo != 'STPI' && promo != 'Personnel/Enseignant' && promo != 'Sans Promotion'">
+                    <input id="4{{ promo }}" type="checkbox" ng-model="promotions['4'+promo]"/>
+                    4{{ promo }}
+                </td>
+                <td style="vertical-align: middle" ng-show="promo != 'STPI' && promo != 'Personnel/Enseignant' && promo != 'Sans Promotion'">
+                    <input id="5{{ promo }}" type="checkbox" ng-model="promotions['5'+promo]"/>
+                    5{{ promo }}
+                </td>
+                <td colspan="1" style="vertical-align: middle" ng-show="promo == 'STPI'">
+                    <input id="1{{ promo }}" type="checkbox" ng-model="promotions['1'+promo]"/>
+                    1{{ promo }}
+                </td>
+                <td colspan="2" style="vertical-align: middle" ng-show="promo == 'STPI'">
+                    <input id="2{{ promo }}" type="checkbox" ng-model="promotions['2'+promo]"/>
+                    2{{ promo }}
+                </td>
+                <td colspan="3" style="vertical-align: middle" ng-show="promo == 'Personnel/Enseignant' || promo == 'Sans Promotion'">
+                    <input id="{{ promo }}" type="checkbox" ng-model="promotions[promo]"/>
+                    {{ promo }}
+                </td>
+              </tr>
+          </table>
+          <input type="button" ng-click="selectAllPromo(true)" value="Tout sélectionner"/>
+          <input type="button" ng-click="selectAllPromo(false)" value="Tout désélectionner"/>
+          <input type="button" ng-click="invertPromo()" value="Inverser"/>
+          <br/>
+          <br/>
+          <div class="form-group" ng-show="showAdvancedSettings">
+            <label class="col-sm-2 control-label">Plateforme</label>
+            <div class="col-sm-10">
+              <p><input type="checkbox" name="android" value="android" ng-model="plateforms['android']"/> Android</p>
+              <p><input type="checkbox" name="ios" value="ios" ng-model="plateforms['iOS']"/> iOS</p>
+            </div>
           </div>
         </div>
-
-        <div class="form-group" ng-show="showAdvancedSettings">
-          <label class="col-sm-2 control-label">Plateforme</label>
-          <div class="col-sm-10">
-            <p><input type="checkbox" name="android" value="android" ng-model="plateforms['android']"/> Android</p>
-            <p><input type="checkbox" name="ios" value="ios" ng-model="plateforms['iOS']"/> iOS</p>
-          </div>
-        </div> -->
 
         <div class="form-group">
           <label class="col-sm-2 control-label"></label>
