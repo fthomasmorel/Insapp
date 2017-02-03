@@ -4,7 +4,6 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"
-	"strings"
 )
 
 var promotions = []string{"", "1STPI", "2STPI",
@@ -39,10 +38,10 @@ func AddUser(user User) User {
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	db := session.DB("insapp").C("user")
-	user.Username = strings.ToLower(user.Username)
+	user.Username = user.Username
 	db.Insert(user)
 	var result User
-	db.Find(bson.M{"username": strings.ToLower(user.Username) }).One(&result)
+	db.Find(bson.M{"username": user.Username}).One(&result)
 	return result
 }
 
