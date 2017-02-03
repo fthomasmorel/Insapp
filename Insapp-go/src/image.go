@@ -2,10 +2,8 @@ package main
 
 import (
     "io"
-    "math/rand"
     "net/http"
     "os"
-  	"time"
     "os/exec"
 
   	"image"
@@ -83,15 +81,4 @@ func GetImageColors(fileName string) [][]int {
     result = append(result, colors)
   }
   return result
-}
-
-// RandomString generates a randomString (y)
-func RandomString(strlen int) string {
-	rand.Seed(time.Now().UTC().UnixNano())
-	const chars = "abcdefghijklmnopqrstuvwxyz0123456789"
-	result := make([]byte, strlen)
-	for i := 0; i < strlen; i++ {
-		result[i] = chars[rand.Intn(len(chars))]
-	}
-	return string(result)
 }

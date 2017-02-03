@@ -1,4 +1,4 @@
-app.controller('CreateAssociation', ['$scope', '$resource', 'Session', '$location', 'ngDialog', 'configuration', function($scope, $resource, Session, $location, ngDialog, configuration) {
+app.controller('CreateAssociation', ['$scope', '$resource', 'Session', '$location', 'ngDialog', 'configuration', '$loadingOverlay', function($scope, $resource, Session, $location, ngDialog, configuration, $loadingOverlay) {
   var Association = $resource(configuration.api + '/association?token=:token')
   var User = $resource(configuration.api + '/association/:id/user?token=:token')
 
@@ -29,14 +29,16 @@ app.controller('CreateAssociation', ['$scope', '$resource', 'Session', '$locatio
   }
 
   $scope.createAssociation = function() {
+    $loadingOverlay.show()
+    $("html, body").animate({ scrollTop: 0 }, "slow");
     Association.save({token:Session.getToken()}, $scope.currentAssociation, function(assos) {
-      User.save({id:assos.ID, token:Session.getToken()}, $scope.currentAssociation, function(assos){
         ngDialog.open({
             template: "<h3 style='text-align:center;'>L'association à été créée</h3>",
             plain: true,
             className: 'ngdialog-theme-default'
         });
-      });
+        $loadingOverlay.hide()
+        $location.path('/myEvents')
     }, function(error) {
         Session.destroyCredentials()
         $location.path('/login')
