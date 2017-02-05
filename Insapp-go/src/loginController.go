@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-  "os/exec"
+    "os/exec"
 	"strings"
 	"io/ioutil"
 	"github.com/freehaha/token-auth/memory"
@@ -85,6 +85,8 @@ func SignInUserController(w http.ResponseWriter, r *http.Request) {
 	if login.Username == "fthomasm" {
 		login.Username = "fthomasm" + RandomString(4)
 	}
+
+    login.Username = strings.ToLower(login.Username)
 
 	if err == nil && len(login.Username) > 0 && len(login.Device) > 0 {
 		conf, _ := Configuration()
