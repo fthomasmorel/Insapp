@@ -85,7 +85,7 @@ func TriggerNotificationForEvent(event Event, sender bson.ObjectId, content bson
     }
   }
   if Contains("android", event.Plateforms) {
-      triggerAndroidNotification(notification, androidUsers)
+      triggerAndroidNotification(notification, users)
   }
 }
 
@@ -111,7 +111,7 @@ func TriggerNotificationForPost(post Post, sender bson.ObjectId, content bson.Ob
     }
   }
   if Contains("android", post.Plateforms) {
-      triggerAndroidNotification(notification, androidUsers)
+      triggerAndroidNotification(notification, users)
   }
 }
 
