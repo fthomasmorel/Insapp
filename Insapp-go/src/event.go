@@ -16,6 +16,7 @@ type Event struct {
 	Participants 	[]bson.ObjectId `json:"participants" bson:"participants,omitempty"`
     Maybe 	        []bson.ObjectId `json:"maybe" bson:"maybe,omitempty"`
     NotGoing 	    []bson.ObjectId `json:"notgoing" bson:"notgoing,omitempty"`
+    Comments        Comments        `json:"comments"`
 	Status       	string          `json:"status"`
 	Palette			 	[][]int				 	`json:"palette"`
 	SelectedColor int						 	`json:"selectedcolor"`
@@ -205,3 +206,8 @@ func SearchEvent(name string) Events {
 		bson.M{"name" : bson.M{ "$regex" : bson.RegEx{`^.*` + name + `.*`, "i"}}}, bson.M{"description" : bson.M{ "$regex" : bson.RegEx{`^.*` + name + `.*`, "i"}}}}}).All(&result)
 	return result
 }
+
+
+//CommentEvent(eventId, comment)
+//UncommentEvent(eventId, comment)
+//GetCommentFromEvent(eventId, comment)

@@ -65,6 +65,39 @@ func UncommentPost(id bson.ObjectId, commentID bson.ObjectId) Post {
 	return post
 }
 
+func CommentEvent(id bson.ObjectId, comment Comment) Event {
+	conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("insapp").C("event")
+	eventID := bson.M{"_id": id}
+	change := bson.M{"$addToSet": bson.M{
+		"comments": comment,
+	}}
+	db.Update(eventID, change)
+	var event Event
+	db.Find(bson.M{"_id": id}).One(&event)
+	return event
+}
+
+func UncommentEvent(id bson.ObjectId, commentID bson.ObjectId) Event {
+	conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("insapp").C("event")
+	DeleteNotificationsForComment(commentID)
+	eventID := bson.M{"_id": id}
+	change := bson.M{"$pull": bson.M{
+		"comments": bson.M{"_id": commentID},
+	}}
+	db.Update(eventID, change)
+	var event Event
+	db.Find(bson.M{"_id": id}).One(&event)
+	return event
+}
+
 func ReportComment(id bson.ObjectId, commentID bson.ObjectId, reporterId bson.ObjectId) {
 	conf, _ := Configuration()
     session, _ := mgo.Dial(conf.Database)
@@ -94,6 +127,16 @@ func ReportComment(id bson.ObjectId, commentID bson.ObjectId, reporterId bson.Ob
 func GetComment(postId bson.ObjectId, id bson.ObjectId) (Comment, error) {
 	post := GetPost(postId)
 	for _, comment := range post.Comments {
+		if comment.ID == id {
+			return comment, nil
+		}
+	}
+	return Comment{}, errors.New("No Comment Found")
+}
+
+func GetCommentForEvent(eventId bson.ObjectId, id bson.ObjectId) (Comment, error) {
+	event := GetEvent(eventId)
+	for _, comment := range event.Comments {
 		if comment.ID == id {
 			return comment, nil
 		}

@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
-
+    "time"
+    "io/ioutil"
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/gorilla/mux"
@@ -140,4 +141,62 @@ func RemoveParticipantController(w http.ResponseWriter, r *http.Request) {
     RemoveParticipant(eventID, userID, "notgoing")
     event, user := RemoveParticipant(eventID, userID, "maybe")
 	json.NewEncoder(w).Encode(bson.M{"event": event, "user": user})
+}
+
+
+// CommentPostController will answer a JSON of the post
+func CommentEventController(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+        w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(bson.M{"error": "Unable to read the request body"})
+	}
+	var comment Comment
+	if err := json.Unmarshal([]byte(string(body)), &comment); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(bson.M{"error": "Mauvais Format"})
+		return
+	}
+
+	isValid := VerifyUserRequest(r, comment.User)
+	if !isValid {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(bson.M{"error": "Contenu Protégé"})
+		return
+	}
+
+	comment.ID = bson.NewObjectId()
+	comment.Date = time.Now()
+
+	vars := mux.Vars(r)
+	eventID := vars["id"]
+	res := CommentEvent(bson.ObjectIdHex(eventID), comment)
+	json.NewEncoder(w).Encode(res)
+
+	// for _, tag := range(comment.Tags){
+	// 	go TriggerNotificationForUser(comment.User, bson.ObjectIdHex(tag.User), res.ID , "@" + GetUser(comment.User).Username + " t'a taggé sur \"" + res.Name + "\"", comment)
+	// }
+}
+
+// UncommentPostController will answer a JSON of the post
+func UncommentEventController(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	eventID := vars["id"]
+	commentID := vars["commentID"]
+	comment, err := GetCommentForEvent(bson.ObjectIdHex(eventID), bson.ObjectIdHex(commentID))
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(bson.M{"error": "Contenu Inexistant"})
+		return
+	}
+	event := GetEvent(bson.ObjectIdHex(eventID))
+	isUserValid := VerifyUserRequest(r, comment.User)
+	isAssociationValid := VerifyAssociationRequest(r, event.Association)
+	if !isUserValid && !isAssociationValid {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(bson.M{"error": "Contenu Protégé"})
+		return
+	}
+	res := UncommentEvent(bson.ObjectIdHex(eventID), bson.ObjectIdHex(commentID))
+	json.NewEncoder(w).Encode(res)
 }
