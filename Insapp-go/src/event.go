@@ -14,6 +14,8 @@ type Event struct {
 	Association  	bson.ObjectId   `json:"association" bson:"association"`
 	Description  	string          `json:"description"`
 	Participants 	[]bson.ObjectId `json:"participants" bson:"participants,omitempty"`
+    Maybe 	        []bson.ObjectId `json:"maybe" bson:"maybe,omitempty"`
+    NotGoing 	    []bson.ObjectId `json:"notgoing" bson:"notgoing,omitempty"`
 	Status       	string          `json:"status"`
 	Palette			 	[][]int				 	`json:"palette"`
 	SelectedColor int						 	`json:"selectedcolor"`
@@ -116,7 +118,9 @@ func DeleteEvent(event Event) Event {
 }
 
 // AddParticipant add the given userID to the given eventID as a participant
-func AddParticipant(id bson.ObjectId, userID bson.ObjectId) (Event, User) {
+func AddParticipantToGoingList(id bson.ObjectId, userID bson.ObjectId) (Event, User) {
+    RemoveParticipant(id, userID, "notgoing")
+    RemoveParticipant(id, userID, "maybe")
 	conf, _ := Configuration()
     session, _ := mgo.Dial(conf.Database)
 	defer session.Close()
@@ -133,6 +137,63 @@ func AddParticipant(id bson.ObjectId, userID bson.ObjectId) (Event, User) {
 	return event, user
 }
 
+func AddParticipantToMaybeList(id bson.ObjectId, userID bson.ObjectId) (Event, User) {
+    RemoveParticipant(id, userID, "notgoing")
+    RemoveParticipant(id, userID, "participants")
+	conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("insapp").C("event")
+	eventID := bson.M{"_id": id}
+	change := bson.M{"$addToSet": bson.M{
+		"maybe": userID,
+	}}
+	db.Update(eventID, change)
+	var event Event
+	db.Find(bson.M{"_id": id}).One(&event)
+	user := GetUser(userID)
+	return event, user
+}
+
+
+func AddParticipantToNotGoingList(id bson.ObjectId, userID bson.ObjectId) (Event, User) {
+    RemoveParticipant(id, userID, "maybe")
+    RemoveParticipant(id, userID, "participants")
+	conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("insapp").C("event")
+	eventID := bson.M{"_id": id}
+	change := bson.M{"$addToSet": bson.M{
+		"notgoing": userID,
+	}}
+	db.Update(eventID, change)
+	var event Event
+	db.Find(bson.M{"_id": id}).One(&event)
+	user := GetUser(userID)
+	return event, user
+}
+
+// RemoveParticipant remove the given userID from the given eventID as a participant
+func RemoveParticipant(id bson.ObjectId, userID bson.ObjectId, list string) (Event, User) {
+    conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("insapp").C("event")
+	eventID := bson.M{"_id": id}
+	change := bson.M{"$pull": bson.M{
+		list: userID,
+	}}
+	db.Update(eventID, change)
+	var event Event
+	db.Find(bson.M{"_id": id}).One(&event)
+	user := RemoveEventFromUser(userID, event.ID)
+	return event, user
+}
+
 func SearchEvent(name string) Events {
     conf, _ := Configuration()
     session, _ := mgo.Dial(conf.Database)
@@ -143,22 +204,4 @@ func SearchEvent(name string) Events {
 	db.Find(bson.M{"$or" : []interface{}{
 		bson.M{"name" : bson.M{ "$regex" : bson.RegEx{`^.*` + name + `.*`, "i"}}}, bson.M{"description" : bson.M{ "$regex" : bson.RegEx{`^.*` + name + `.*`, "i"}}}}}).All(&result)
 	return result
-}
-
-// RemoveParticipant remove the given userID from the given eventID as a participant
-func RemoveParticipant(id bson.ObjectId, userID bson.ObjectId) (Event, User) {
-    conf, _ := Configuration()
-    session, _ := mgo.Dial(conf.Database)
-	defer session.Close()
-	session.SetMode(mgo.Monotonic, true)
-	db := session.DB("insapp").C("event")
-	eventID := bson.M{"_id": id}
-	change := bson.M{"$pull": bson.M{
-		"participants": userID,
-	}}
-	db.Update(eventID, change)
-	var event Event
-	db.Find(bson.M{"_id": id}).One(&event)
-	user := RemoveEventFromUser(userID, event.ID)
-	return event, user
 }

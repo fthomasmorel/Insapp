@@ -110,7 +110,7 @@ var userRoutes = Routes{
 	//EVENTS
 	Route{"GetFutureEvents", "GET", "/event", GetFutureEventsController},
 	Route{"GetEvent", "GET", "/event/{id}", GetEventController},
-	Route{"AddParticipant", "POST", "/event/{id}/participant/{userID}", AddParticipantController},
+	Route{"AddParticipant", "POST", "/event/{id}/participant/{userID}/status/{status}", ChangeAttendeeStatusController},
 	Route{"RemoveParticipant", "DELETE", "/event/{id}/participant/{userID}", RemoveParticipantController},
 
 	//POSTS

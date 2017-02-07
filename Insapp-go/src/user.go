@@ -93,7 +93,9 @@ func DeleteUser(user User) User {
 	DeleteNotificationsForUser(user.ID)
 	DeleteNotificationTokenForUser(user.ID)
 	for _, eventId := range user.Events{
-		RemoveParticipant(eventId, user.ID)
+		RemoveParticipant(eventId, user.ID, "going")
+        RemoveParticipant(eventId, user.ID, "notgoing")
+        RemoveParticipant(eventId, user.ID, "maybe")
 	}
 	for _, postId := range user.PostsLiked{
 		DislikePostWithUser(postId, user.ID)
