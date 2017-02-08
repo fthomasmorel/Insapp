@@ -1,19 +1,36 @@
 package main
 
 import (
-    "io"
+    "io/ioutil"
     "net/http"
     "os"
     "os/exec"
-
   	"image"
   	_ "image/jpeg"
   	_ "image/png"
+    _ "image/gif"
 
     "strings"
     "strconv"
 
 )
+
+var magicTable = map[string]string{
+    "\xff\xd8\xff":      "jpeg",
+    "\x89PNG\r\n\x1a\n": "png",
+    "GIF87a":            "gif",
+    "GIF89a":            "gif",
+}
+
+func mimeFromIncipit(incipit []byte) string {
+    incipitStr := string(incipit)
+    for magic, mime := range magicTable {
+        if strings.HasPrefix(incipitStr, magic) {
+            return mime
+        }
+    }
+    return ""
+}
 
 func UploadImage(r *http.Request) string{
   return UploadImageWithName(r, RandomString(40))
@@ -26,22 +43,30 @@ func UploadImageWithName(r *http.Request, name string) string {
 	if err != nil {
 		return "error"
 	}
+    data, err := ioutil.ReadAll(file)
+    if err != nil {
+        return "error"
+    }
+    imgType := mimeFromIncipit(data)
+
+    if imgType == "" {
+        return "error"
+    }
 	defer file.Close()
 
 	fileName := name
-	f, err := os.OpenFile("./img/"+fileName+".png", os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		return "error"
-	}
-
-	defer f.Close()
-	io.Copy(f, file)
-
-	return fileName + ".png"
+    err = ioutil.WriteFile("./img/" + fileName + "." + imgType, data, 0666)
+    if err != nil {
+        return "error"
+    }
+	return fileName + "." + imgType
 }
 
 func GetImageDimension(fileName string) (int, int) {
-    file, _ := os.Open("./img/"+fileName)
+    file, err := os.Open("./img/"+fileName)
+    if err != nil {
+        return 0, 0
+    }
     image, _, _ := image.DecodeConfig(file)
     return image.Width, image.Height
 }
