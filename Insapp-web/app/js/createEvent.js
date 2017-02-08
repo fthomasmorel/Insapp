@@ -10,7 +10,7 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
     return (lastIndex == 1 && str.length == this.length-1)|| (lastIndex == 0 && str.length == this.length)
   }
 
-  $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Sans Promotion"]
+  $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Alternant", "Sans Promotion"]
   $scope.showAdvancedSettings = false
   $scope.promotions = {
     "1STPI": true,
@@ -37,6 +37,7 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
     "4SRC": true,
     "5SRC": true,
     "Personnel/Enseignant": true,
+    "Alternant": true,
     "Sans Promotion": true,
   }
 
@@ -160,7 +161,7 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
 
   $scope.selectYear = function(year){
       Object.keys($scope.promotions).forEach(function (key) {
-          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Alternant" || key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
               $scope.promotions[key] = true
           }
       })
@@ -168,7 +169,7 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
 
   $scope.deselectYear = function(year){
       Object.keys($scope.promotions).forEach(function (key) {
-          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Alternant" || key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
               $scope.promotions[key] = false
           }
       })

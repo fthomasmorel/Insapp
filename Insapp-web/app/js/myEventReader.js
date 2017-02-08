@@ -18,7 +18,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
       return (lastIndex == 1 && str.length == this.length-1)|| (lastIndex == 0 && str.length == this.length)
     }
 
-    $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Sans Promotion"]
+    $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Alternant", "Sans Promotion"]
     $scope.showAdvancedSettings = false
     $scope.promotions = {
       "1STPI": true,
@@ -45,6 +45,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
       "4SRC": true,
       "5SRC": true,
       "Personnel/Enseignant": true,
+      "Alternant": true,
       "Sans Promotion": true,
     }
 
@@ -71,7 +72,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
 
     $scope.selectYear = function(year){
         Object.keys($scope.promotions).forEach(function (key) {
-            if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+            if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Alternant" || key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
                 $scope.promotions[key] = true
             }
         })
@@ -79,7 +80,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
 
     $scope.deselectYear = function(year){
         Object.keys($scope.promotions).forEach(function (key) {
-            if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+            if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Alternant" || key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
                 $scope.promotions[key] = false
             }
         })
