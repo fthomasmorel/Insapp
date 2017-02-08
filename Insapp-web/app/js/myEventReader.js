@@ -1,5 +1,6 @@
 app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session', '$location', 'ngDialog', 'fileUpload', '$loadingOverlay', 'configuration', function($scope, $resource, $routeParams, Session, $location, ngDialog, fileUpload, $loadingOverlay, configuration) {
   var Event = $resource(configuration.api + '/event/:id?token=:token', null, { 'update': { method:'PUT' } });
+  var Comment = $resource(configuration.api + '/event/:id/comment/:commentId?token=:token');
 
   if(Session.getToken() == null || Session.getAssociation() == null){
     $location.path('/login')
@@ -273,5 +274,24 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
         $location.path('/login')
     });
   }
+
+
+    $scope.deleteComment = function(commentId) {
+      Comment.remove({id:$scope.currentEvent.ID, commentId: commentId, token:Session.getToken()}, function(event) {
+        event.nbComments = (event.comments != null ? event.comments.length : 0)
+        event.nbParticipant = (event.participants != null ? event.participants.length : 0)
+        $scope.currentEvent = event
+        $scope.currentEvent.imageUrl = configuration.cdn + event.image
+        $scope.oldEvent = event
+        ngDialog.open({
+            template: "<h2 style='text-align:center;'>Le commentaire a été supprimé</h2>",
+            plain: true,
+            className: 'ngdialog-theme-default'
+        });
+      }, function(error) {
+          Session.destroyCredentials()
+          $location.path('/login')
+      });
+    }
 
 }]);

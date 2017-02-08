@@ -21,6 +21,9 @@ app.controller('MyEvents', ['$scope', '$resource', '$location', 'Session', 'conf
     for (eventID of assos.events){
       Event.get({id:eventID, token:Session.getToken()}, function(event) {
         event.nbParticipant = (event.participants != null ? event.participants.length : 0)
+        event.nbMaybe = (event.maybe != null ? event.maybe.length : 0)
+        event.nbNotgoing = (event.notgoing != null ? event.notgoing.length : 0)
+        event.nbComments = (event.comments != null ? event.comments.length : 0)
         if(new Date(event.dateEnd).getTime() < new Date().getTime()){
           $scope.allPastEvents.push(event)
         }else{
