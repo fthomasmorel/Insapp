@@ -1,4 +1,4 @@
-app.controller('CreatePost', ['$scope', '$resource', '$routeParams', 'fileUpload', 'Session', '$location', 'ngDialog', '$loadingOverlay', 'configuration', function($scope, $resource, $routeParams, fileUpload, Session, $location, ngDialog, $loadingOverlay, configuration) {
+app.controller('CreatePost', ['$scope', '$resource', '$routeParams', 'fileUpload', 'Session', '$location', 'ngDialog', '$loadingOverlay', 'configuration', '$window', function($scope, $resource, $routeParams, fileUpload, Session, $location, ngDialog, $loadingOverlay, configuration, $window) {
   var Post = $resource(configuration.api + '/post?token=:token');
 
   if(Session.getToken() == null || Session.getAssociation() == null){
@@ -141,6 +141,10 @@ app.controller('CreatePost', ['$scope', '$resource', '$routeParams', 'fileUpload
     Object.keys($scope.promotions).forEach(function (key) {
       $scope.promotions[key] = !$scope.promotions[key]
     })
+  }
+
+  $scope.searchGif = function(){
+      $window.open('http://giphy.com', '_blank');
   }
 
   $scope.uploadImage = function (file, fileName, completion) {
