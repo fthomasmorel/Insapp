@@ -19,6 +19,8 @@ type Association struct {
 	Cover	    	string          `json:"cover"`
 	BgColor     string          `json:"bgcolor"`
 	FgColor     string          `json:"fgcolor"`
+    NoEmailPostComment     bool `json:"noemailpostcomment"`
+    NoEmailEventComment    bool `json:"noemaileventcomment"`
 }
 
 // Associations is an array of Association
@@ -56,15 +58,17 @@ func UpdateAssociation(id bson.ObjectId, association Association) Association {
 	db := session.DB("insapp").C("association")
 	assosID := bson.M{"_id": id}
 	change := bson.M{"$set": bson.M{
-		"name":        		association.Name,
-		"email":       		association.Email,
-		"description": 		association.Description,
-		"profile":     		association.Profile,
-		"cover":     	 		association.Cover,
-		"palette":		 		association.Palette,
-		"selectedcolor":	association.SelectedColor,
-		"bgcolor":     		association.BgColor,
-		"fgcolor":     		association.FgColor,
+		"name":        		     association.Name,
+		"email":       		     association.Email,
+		"description": 		     association.Description,
+		"profile":     		     association.Profile,
+		"cover":     	 		 association.Cover,
+		"palette":		 		 association.Palette,
+		"selectedcolor":	     association.SelectedColor,
+		"bgcolor":     		     association.BgColor,
+		"fgcolor":     		     association.FgColor,
+        "noemailpostcomment":    association.NoEmailPostComment,
+        "noemaileventcomment":    association.NoEmailEventComment,
 	}}
 	db.Update(assosID, change)
 	var result Association

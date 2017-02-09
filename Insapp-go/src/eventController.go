@@ -7,7 +7,6 @@ import (
     "time"
     "io/ioutil"
 	"gopkg.in/mgo.v2/bson"
-
 	"github.com/gorilla/mux"
 )
 
@@ -170,8 +169,16 @@ func CommentEventController(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	eventID := vars["id"]
-	res := CommentEvent(bson.ObjectIdHex(eventID), comment)
-	json.NewEncoder(w).Encode(res)
+
+    event := CommentEvent(bson.ObjectIdHex(eventID), comment)
+    association := GetAssociation(event.Association)
+    user := GetUser(comment.User)
+
+    json.NewEncoder(w).Encode(event)
+
+    if !association.NoEmailEventComment {
+        SendAssociationEmailForCommentOnEvent(association.Email, event, comment, user)
+    }
 
 	// for _, tag := range(comment.Tags){
 	// 	go TriggerNotificationForUser(comment.User, bson.ObjectIdHex(tag.User), res.ID , "@" + GetUser(comment.User).Username + " t'a taggé sur \"" + res.Name + "\"", comment)

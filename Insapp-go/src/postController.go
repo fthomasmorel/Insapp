@@ -156,11 +156,18 @@ func CommentPostController(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	postID := vars["id"]
-	res := CommentPost(bson.ObjectIdHex(postID), comment)
-	json.NewEncoder(w).Encode(res)
+	post := CommentPost(bson.ObjectIdHex(postID), comment)
+    association := GetAssociation(post.Association)
+    user := GetUser(comment.User)
+
+    json.NewEncoder(w).Encode(post)
+
+    if !association.NoEmailPostComment {
+        SendAssociationEmailForCommentOnPost(association.Email, post, comment, user)
+    }
 
 	for _, tag := range(comment.Tags){
-		go TriggerNotificationForUser(comment.User, bson.ObjectIdHex(tag.User), res.ID , "@" + GetUser(comment.User).Username + " t'a taggé sur \"" + res.Title + "\"", comment)
+		go TriggerNotificationForUser(comment.User, bson.ObjectIdHex(tag.User), post.ID , "@" + GetUser(comment.User).Username + " t'a taggé sur \"" + post.Title + "\"", comment)
 	}
 }
 
