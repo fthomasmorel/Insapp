@@ -59,7 +59,8 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
       plateforms  : [],
       participants: [],
       bgColor     : "",
-      fgColor     : ""
+      fgColor     : "",
+      enableNotification: true
   }
 
   function distance(v1, v2){
@@ -189,6 +190,9 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
 
   $scope.createEvent = function(isValid) {
     if (!isValid){ return }
+
+    $scope.currentEvent.nonotification = !$scope.currentEvent.enableNotification
+
     promotions = Object.keys($scope.promotions).filter(function(promotion){
       return $scope.promotions[promotion]
     })

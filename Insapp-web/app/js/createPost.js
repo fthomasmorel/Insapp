@@ -60,7 +60,8 @@ app.controller('CreatePost', ['$scope', '$resource', '$routeParams', 'fileUpload
       comments    : [],
       plateforms  : [],
       promotions  : [],
-      likes       : []
+      likes       : [],
+      enableNotification: true
   }
 
   $scope.monitorLength = function (field, maxLength) {
@@ -168,6 +169,9 @@ app.controller('CreatePost', ['$scope', '$resource', '$routeParams', 'fileUpload
   }
 
   $scope.createPost = function() {
+
+      $scope.currentPost.nonotification = !$scope.currentPost.enableNotification
+
     promotions = Object.keys($scope.promotions).filter(function(promotion){
         return $scope.promotions[promotion]
     })

@@ -101,6 +101,8 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
 
   Event.get({id:$routeParams.id, token:Session.getToken()}, function(event) {
       event.nbParticipant = (event.participants != null ? event.participants.length : 0)
+      event.enableNotification = !event.nonotification
+
       $scope.eventImageFile = configuration.cdn + event.image
       $scope.oldEvent = event
       $scope.currentEvent = event
@@ -217,6 +219,8 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
   }
 
   $scope.updateEvent = function() {
+
+      $scope.currentEvent.nonotification = !$scope.currentEvent.enableNotification
 
       var promotions = Object.keys($scope.promotions).filter(function(promotion){
         return $scope.promotions[promotion]

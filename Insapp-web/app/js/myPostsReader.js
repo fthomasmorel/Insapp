@@ -102,6 +102,7 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
     post.nbComments = (post.comments != null ? post.comments.length : 0)
       $scope.currentPost = post
       $scope.currentPost.imageUrl = configuration.cdn + post.image
+      $scope.currentPost.enableNotification = !$scope.currentPost.nonotification
 
       for (promo in $scope.promotions) {
           $scope.promotions[promo] = $scope.currentPost.promotions.includes(promo.toUpperCase())
@@ -141,6 +142,8 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
   }
 
   $scope.updatePost = function() {
+
+      $scope.currentPost.nonotification = !$scope.currentPost.enableNotification
 
     var promotions = Object.keys($scope.promotions).filter(function(promotion){
       return $scope.promotions[promotion]

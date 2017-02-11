@@ -20,6 +20,7 @@ type Post struct {
     Plateforms       []string        `json:"plateforms"`
 	Image    		string          `json:"image"`
 	ImageSize		bson.M					`json:"imageSize"`
+    NoNotification     bool `json:"nonotification"`
 }
 
 // Posts is an array of Post
@@ -56,6 +57,7 @@ func UpdatePost(id bson.ObjectId, post Post) Post {
         "plateforms"		:	post.Plateforms,
         "promotions"		:	post.Promotions,
 		"imageSize"		:	post.ImageSize,
+        "nonotification":    post.NoNotification,
 	}}
 	db.Update(postID, change)
 	var result Post

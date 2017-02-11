@@ -19,8 +19,6 @@ type Association struct {
 	Cover	    	string          `json:"cover"`
 	BgColor     string          `json:"bgcolor"`
 	FgColor     string          `json:"fgcolor"`
-    NoEmailPostComment     bool `json:"noemailpostcomment"`
-    NoEmailEventComment    bool `json:"noemaileventcomment"`
 }
 
 // Associations is an array of Association
@@ -67,8 +65,6 @@ func UpdateAssociation(id bson.ObjectId, association Association) Association {
 		"selectedcolor":	     association.SelectedColor,
 		"bgcolor":     		     association.BgColor,
 		"fgcolor":     		     association.FgColor,
-        "noemailpostcomment":    association.NoEmailPostComment,
-        "noemaileventcomment":    association.NoEmailEventComment,
 	}}
 	db.Update(assosID, change)
 	var result Association

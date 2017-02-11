@@ -25,8 +25,6 @@ function($scope, $resource, Session, $location, ngDialog, Upload, fileUpload, $l
 
     assos.profilePictureUrl = (assos.profile != null ? configuration.cdn + assos.profile : null)
     assos.coverPictureUrl = (assos.cover != null ? configuration.cdn + assos.cover : null)
-    assos.noemaileventcomment = !assos.noemaileventcomment
-    assos.noemailpostcomment = !assos.noemailpostcomment
 
     $scope.oldAssociation = assos
     $scope.currentAssociation = assos
@@ -177,8 +175,6 @@ function($scope, $resource, Session, $location, ngDialog, Upload, fileUpload, $l
 
   $scope.updateAssociation = function() {
     $loadingOverlay.show()
-    $scope.currentAssociation.noemaileventcomment = !$scope.currentAssociation.noemaileventcomment
-    $scope.currentAssociation.noemailpostcomment = !$scope.currentAssociation.noemailpostcomment
     $("html, body").animate({ scrollTop: 0 }, "slow");
     Association.update({id:$scope.associationId, token:Session.getToken()}, $scope.currentAssociation, function(assos) {
         ngDialog.open({
@@ -188,8 +184,6 @@ function($scope, $resource, Session, $location, ngDialog, Upload, fileUpload, $l
         });
         $loadingOverlay.hide()
         $scope.currentAssociation = assos
-        $scope.currentAssociation.noemaileventcomment = !$scope.currentAssociation.noemaileventcomment
-        $scope.currentAssociation.noemailpostcomment = !$scope.currentAssociation.noemailpostcomment
     }, function(error) {
         Session.destroyCredentials()
         $location.path('/login')

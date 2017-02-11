@@ -162,12 +162,12 @@ func CommentPostController(w http.ResponseWriter, r *http.Request) {
 
     json.NewEncoder(w).Encode(post)
 
-    if !association.NoEmailPostComment {
+    if !post.NoNotification {
         SendAssociationEmailForCommentOnPost(association.Email, post, comment, user)
     }
 
 	for _, tag := range(comment.Tags){
-		go TriggerNotificationForUser(comment.User, bson.ObjectIdHex(tag.User), post.ID , "@" + GetUser(comment.User).Username + " t'a taggé sur \"" + post.Title + "\"", comment)
+		go TriggerNotificationForUser(comment.User, bson.ObjectIdHex(tag.User), post.ID , "@" + GetUser(comment.User).Username + " t'a taggé sur \"" + post.Title + "\"", comment, "tag")
 	}
 }
 

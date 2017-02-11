@@ -27,6 +27,7 @@ type Event struct {
     Plateforms       []string        `json:"plateforms"`
 	BgColor      	string          `json:"bgColor"`
 	FgColor      	string          `json:"fgColor"`
+    NoNotification  bool          `json:"nonotification"`
 }
 
 // Events is an array of Event
@@ -93,6 +94,7 @@ func UpdateEvent(id bson.ObjectId, event Event) Event {
         "promotions"			:	event.Promotions,
 		"bgcolor"				:	event.BgColor,
 		"fgcolor"				: event.FgColor,
+        "nonotification"	   : event.NoNotification,
 	}}
 	db.Update(eventID, change)
 	var result Event

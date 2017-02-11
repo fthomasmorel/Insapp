@@ -176,13 +176,13 @@ func CommentEventController(w http.ResponseWriter, r *http.Request) {
 
     json.NewEncoder(w).Encode(event)
 
-    if !association.NoEmailEventComment {
+    if !event.NoNotification {
         SendAssociationEmailForCommentOnEvent(association.Email, event, comment, user)
     }
 
-	// for _, tag := range(comment.Tags){
-	// 	go TriggerNotificationForUser(comment.User, bson.ObjectIdHex(tag.User), res.ID , "@" + GetUser(comment.User).Username + " t'a taggé sur \"" + res.Name + "\"", comment)
-	// }
+	for _, tag := range(comment.Tags){
+		go TriggerNotificationForUser(comment.User, bson.ObjectIdHex(tag.User), event.ID , "@" + GetUser(comment.User).Username + " t'a taggé sur \"" + event.Name + "\"", comment, "eventTag")
+	}
 }
 
 // UncommentPostController will answer a JSON of the post

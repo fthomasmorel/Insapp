@@ -52,8 +52,8 @@ func getNotificationUserForUser(user bson.ObjectId) NotificationUser {
   return result
 }
 
-func TriggerNotificationForUser(sender bson.ObjectId, receiver bson.ObjectId, content bson.ObjectId, message string, comment Comment){
-  notification := Notification{Sender: sender, Content: content, Message: message, Comment: comment, Type: "tag"}
+func TriggerNotificationForUser(sender bson.ObjectId, receiver bson.ObjectId, content bson.ObjectId, message string, comment Comment, tagType string){
+  notification := Notification{Sender: sender, Content: content, Message: message, Comment: comment, Type: tagType}
   user := getNotificationUserForUser(receiver)
   if user.Os == "iOS" {
     triggeriOSNotification(notification, []NotificationUser{user})
