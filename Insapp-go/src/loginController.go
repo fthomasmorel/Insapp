@@ -173,7 +173,7 @@ func verifyTicket(ticket string) (string, error){
 	username := strings.Split(xml, "<cas:user>")[1]
 	username = strings.Split(username, "</cas:user>")[0]
 
-	if !(len(username) > 5) {
+	if !(len(username) > 2) {
 		return "", errors.New("Impossible de verfifier l'identité")
 	}
 	return username, nil
