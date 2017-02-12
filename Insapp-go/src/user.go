@@ -101,7 +101,9 @@ func DeleteUser(user User) User {
 		DislikePostWithUser(postId, user.ID)
 	}
 	DeleteTagsForUser(user.ID)
+    DeleteTagsForUserOnEvents(user.ID)
 	DeleteCommentsForUser(user.ID)
+    DeleteCommentsForUserOnEvents(user.ID)
 	db.RemoveId(user.ID)
 	var result User
 	db.FindId(user.ID).One(result)

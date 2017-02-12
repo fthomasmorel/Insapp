@@ -96,6 +96,20 @@ func DeleteEventController(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(res)
 }
 
+func AddParticipantController(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	eventID := bson.ObjectIdHex(vars["id"])
+	userID := bson.ObjectIdHex(vars["userID"])
+	isValid := VerifyUserRequest(r, userID)
+	if !isValid {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(bson.M{"error": "Contenu Protégé"})
+		return
+	}
+    event, user := AddParticipantToGoingList(eventID, userID)
+    json.NewEncoder(w).Encode(bson.M{"event": event, "user": user})
+}
+
 // AddParticipantController will answer the JSON
 // of the event with the given partipant added
 func ChangeAttendeeStatusController(w http.ResponseWriter, r *http.Request) {

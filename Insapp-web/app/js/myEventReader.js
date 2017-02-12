@@ -287,7 +287,8 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
         event.nbParticipant = (event.participants != null ? event.participants.length : 0)
         $scope.currentEvent = event
         $scope.currentEvent.imageUrl = configuration.cdn + event.image
-        $scope.oldEvent = event
+        $scope.currentEvent.enableNotification = !$scope.currentEvent.nonotification
+        $scope.oldEvent = $scope.currentEvent
         ngDialog.open({
             template: "<h2 style='text-align:center;'>Le commentaire a été supprimé</h2>",
             plain: true,

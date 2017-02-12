@@ -45,6 +45,17 @@ func GetEvent(id bson.ObjectId) Event {
 	return result
 }
 
+func GetEvents() Events {
+	conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("insapp").C("event")
+	var result Events
+	db.Find(bson.M{}).All(&result)
+	return result
+}
+
 // GetFutureEvents returns an array of Event objects
 // that will happen after "NOW"
 func GetFutureEvents() Events {

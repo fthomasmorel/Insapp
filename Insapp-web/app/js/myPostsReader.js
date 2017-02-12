@@ -126,10 +126,11 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
 
   $scope.deleteComment = function(commentId) {
     Comment.remove({id:$scope.currentPost.ID, commentId: commentId, token:Session.getToken()}, function(post) {
-      post.nbLikes = (post.likes != null ? post.likes.length : 0)
-      post.nbComments = (post.comments != null ? post.comments.length : 0)
+        post.nbLikes = (post.likes != null ? post.likes.length : 0)
+        post.nbComments = (post.comments != null ? post.comments.length : 0)
         post.image = configuration.cdn + post.photourl
         $scope.currentPost = post
+        $scope.currentPost.enableNotification = !$scope.currentPost.nonotification
       ngDialog.open({
           template: "<h2 style='text-align:center;'>Le commentaire a été supprimé</h2>",
           plain: true,

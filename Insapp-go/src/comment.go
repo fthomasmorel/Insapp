@@ -156,6 +156,18 @@ func getCommentforUser(id bson.ObjectId, userId bson.ObjectId) []bson.ObjectId {
 	return results
 }
 
+func getCommentForUserOnEvent(id bson.ObjectId, userId bson.ObjectId) []bson.ObjectId {
+	event := GetEvent(id)
+	comments := event.Comments
+	var results []bson.ObjectId
+	for _, comment := range comments{
+		if comment.User == userId {
+			results = append(results, comment.ID)
+		}
+	}
+	return results
+}
+
 func DeleteCommentsForUser(userId bson.ObjectId) {
 	posts := GetLastestPosts(100)
 	for _, post := range posts {
@@ -163,6 +175,41 @@ func DeleteCommentsForUser(userId bson.ObjectId) {
 		for _, commentId := range comments {
 				UncommentPost(post.ID, commentId)
 		}
+	}
+}
+
+func DeleteCommentsForUserOnEvents(userId bson.ObjectId) {
+	events := GetEvents()
+	for _, event := range events {
+		comments := getCommentForUserOnEvent(event.ID, userId)
+		for _, commentId := range comments {
+				UncommentEvent(event.ID, commentId)
+		}
+	}
+}
+
+func DeleteTagsForUserOnEvents(userId bson.ObjectId) {
+    conf, _ := Configuration()
+    session, _ := mgo.Dial(conf.Database)
+    defer session.Close()
+    session.SetMode(mgo.Monotonic, true)
+    db := session.DB("insapp").C("event")
+	events := GetEvents()
+	for _, event := range(events){
+		comments := event.Comments
+		finalComments := Comments{}
+		for _, comment := range(comments){
+			tags := comment.Tags
+			finalTags := Tags{}
+			for _, tag := range(tags){
+				if tag.User != userId.Hex() {
+					finalTags = append(finalTags, tag)
+				}
+			}
+			comment.Tags = finalTags
+			finalComments = append(finalComments, comment)
+		}
+		db.Update(bson.M{"_id": event.ID}, bson.M{"$set": bson.M{"comments": finalComments}})
 	}
 }
 
