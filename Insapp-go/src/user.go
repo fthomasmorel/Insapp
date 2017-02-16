@@ -10,7 +10,7 @@ var promotions = []string{"", "1STPI", "2STPI",
     "3EII", "3GM", "3GCU", "3GMA", "3INFO", "3SGM", "3SRC",
     "4EII", "4GM", "4GCU", "4GMA", "4INFO", "4SGM", "4SRC",
     "5EII", "5GM", "5GCU", "5GMA", "5INFO", "5SGM", "5SRC",
-    "Personnel/Enseignant"}
+    "Alternant", "Personnel/Enseignant"}
 
 var genders = []string{"", "female", "male"}
 
@@ -93,13 +93,17 @@ func DeleteUser(user User) User {
 	DeleteNotificationsForUser(user.ID)
 	DeleteNotificationTokenForUser(user.ID)
 	for _, eventId := range user.Events{
-		RemoveParticipant(eventId, user.ID)
+		RemoveParticipant(eventId, user.ID, "going")
+        RemoveParticipant(eventId, user.ID, "notgoing")
+        RemoveParticipant(eventId, user.ID, "maybe")
 	}
 	for _, postId := range user.PostsLiked{
 		DislikePostWithUser(postId, user.ID)
 	}
 	DeleteTagsForUser(user.ID)
+    DeleteTagsForUserOnEvents(user.ID)
 	DeleteCommentsForUser(user.ID)
+    DeleteCommentsForUserOnEvents(user.ID)
 	db.RemoveId(user.ID)
 	var result User
 	db.FindId(user.ID).One(result)

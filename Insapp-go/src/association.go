@@ -56,15 +56,15 @@ func UpdateAssociation(id bson.ObjectId, association Association) Association {
 	db := session.DB("insapp").C("association")
 	assosID := bson.M{"_id": id}
 	change := bson.M{"$set": bson.M{
-		"name":        		association.Name,
-		"email":       		association.Email,
-		"description": 		association.Description,
-		"profile":     		association.Profile,
-		"cover":     	 		association.Cover,
-		"palette":		 		association.Palette,
-		"selectedcolor":	association.SelectedColor,
-		"bgcolor":     		association.BgColor,
-		"fgcolor":     		association.FgColor,
+		"name":        		     association.Name,
+		"email":       		     association.Email,
+		"description": 		     association.Description,
+		"profile":     		     association.Profile,
+		"cover":     	 		 association.Cover,
+		"palette":		 		 association.Palette,
+		"selectedcolor":	     association.SelectedColor,
+		"bgcolor":     		     association.BgColor,
+		"fgcolor":     		     association.FgColor,
 	}}
 	db.Update(assosID, change)
 	var result Association

@@ -1,5 +1,6 @@
 app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session', '$location', 'ngDialog', 'fileUpload', '$loadingOverlay', 'configuration', function($scope, $resource, $routeParams, Session, $location, ngDialog, fileUpload, $loadingOverlay, configuration) {
   var Event = $resource(configuration.api + '/event/:id?token=:token', null, { 'update': { method:'PUT' } });
+  var Comment = $resource(configuration.api + '/event/:id/comment/:commentId?token=:token');
 
   if(Session.getToken() == null || Session.getAssociation() == null){
     $location.path('/login')
@@ -17,7 +18,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
       return (lastIndex == 1 && str.length == this.length-1)|| (lastIndex == 0 && str.length == this.length)
     }
 
-    $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Sans Promotion"]
+    $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Alternant", "Sans Promotion"]
     $scope.showAdvancedSettings = false
     $scope.promotions = {
       "1STPI": true,
@@ -44,6 +45,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
       "4SRC": true,
       "5SRC": true,
       "Personnel/Enseignant": true,
+      "Alternant": true,
       "Sans Promotion": true,
     }
 
@@ -70,7 +72,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
 
     $scope.selectYear = function(year){
         Object.keys($scope.promotions).forEach(function (key) {
-            if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+            if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Alternant" || key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
                 $scope.promotions[key] = true
             }
         })
@@ -78,7 +80,7 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
 
     $scope.deselectYear = function(year){
         Object.keys($scope.promotions).forEach(function (key) {
-            if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+            if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Alternant" || key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
                 $scope.promotions[key] = false
             }
         })
@@ -99,6 +101,8 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
 
   Event.get({id:$routeParams.id, token:Session.getToken()}, function(event) {
       event.nbParticipant = (event.participants != null ? event.participants.length : 0)
+      event.enableNotification = !event.nonotification
+
       $scope.eventImageFile = configuration.cdn + event.image
       $scope.oldEvent = event
       $scope.currentEvent = event
@@ -216,6 +220,8 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
 
   $scope.updateEvent = function() {
 
+      $scope.currentEvent.nonotification = !$scope.currentEvent.enableNotification
+
       var promotions = Object.keys($scope.promotions).filter(function(promotion){
         return $scope.promotions[promotion]
       })
@@ -273,5 +279,25 @@ app.controller('MyEventReader', ['$scope', '$resource', '$routeParams', 'Session
         $location.path('/login')
     });
   }
+
+
+    $scope.deleteComment = function(commentId) {
+      Comment.remove({id:$scope.currentEvent.ID, commentId: commentId, token:Session.getToken()}, function(event) {
+        event.nbComments = (event.comments != null ? event.comments.length : 0)
+        event.nbParticipant = (event.participants != null ? event.participants.length : 0)
+        $scope.currentEvent = event
+        $scope.currentEvent.imageUrl = configuration.cdn + event.image
+        $scope.currentEvent.enableNotification = !$scope.currentEvent.nonotification
+        $scope.oldEvent = $scope.currentEvent
+        ngDialog.open({
+            template: "<h2 style='text-align:center;'>Le commentaire a été supprimé</h2>",
+            plain: true,
+            className: 'ngdialog-theme-default'
+        });
+      }, function(error) {
+          Session.destroyCredentials()
+          $location.path('/login')
+      });
+    }
 
 }]);

@@ -17,7 +17,7 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
     return (lastIndex == 1 && str.length == this.length-1)|| (lastIndex == 0 && str.length == this.length)
   }
 
-  $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Sans Promotion"]
+  $scope.promotionNames = ["EII", "GM", "GMA", "GCU", "INFO", "SGM", "SRC", "STPI", "Personnel/Enseignant", "Alternant", "Sans Promotion"]
   $scope.showAdvancedSettings = false
   $scope.promotions = {
     "1STPI": true,
@@ -44,6 +44,7 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
     "4SRC": true,
     "5SRC": true,
     "Personnel/Enseignant": true,
+    "Alternant": true,
     "Sans Promotion": true,
   }
 
@@ -70,7 +71,7 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
 
   $scope.selectYear = function(year){
       Object.keys($scope.promotions).forEach(function (key) {
-          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Alternant" || key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
               $scope.promotions[key] = true
           }
       })
@@ -78,7 +79,7 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
 
   $scope.deselectYear = function(year){
       Object.keys($scope.promotions).forEach(function (key) {
-          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
+          if ((key.includes(year) && year != 3) || key.includes(year+2) || (year == 1 && (key == "Alternant" || key == "Personnel/Enseignant" || key == "Sans Promotion"))) {
               $scope.promotions[key] = false
           }
       })
@@ -101,6 +102,7 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
     post.nbComments = (post.comments != null ? post.comments.length : 0)
       $scope.currentPost = post
       $scope.currentPost.imageUrl = configuration.cdn + post.image
+      $scope.currentPost.enableNotification = !$scope.currentPost.nonotification
 
       for (promo in $scope.promotions) {
           $scope.promotions[promo] = $scope.currentPost.promotions.includes(promo.toUpperCase())
@@ -124,10 +126,11 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
 
   $scope.deleteComment = function(commentId) {
     Comment.remove({id:$scope.currentPost.ID, commentId: commentId, token:Session.getToken()}, function(post) {
-      post.nbLikes = (post.likes != null ? post.likes.length : 0)
-      post.nbComments = (post.comments != null ? post.comments.length : 0)
+        post.nbLikes = (post.likes != null ? post.likes.length : 0)
+        post.nbComments = (post.comments != null ? post.comments.length : 0)
         post.image = configuration.cdn + post.photourl
         $scope.currentPost = post
+        $scope.currentPost.enableNotification = !$scope.currentPost.nonotification
       ngDialog.open({
           template: "<h2 style='text-align:center;'>Le commentaire a été supprimé</h2>",
           plain: true,
@@ -140,6 +143,8 @@ app.controller('MyPostsReader', ['$scope', '$resource', '$routeParams', 'Session
   }
 
   $scope.updatePost = function() {
+
+      $scope.currentPost.nonotification = !$scope.currentPost.enableNotification
 
     var promotions = Object.keys($scope.promotions).filter(function(promotion){
       return $scope.promotions[promotion]

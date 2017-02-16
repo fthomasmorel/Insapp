@@ -17,6 +17,10 @@ func UploadNewImageController(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(bson.M{"error": "Failed to upload image"})
 	} else {
     width, height := GetImageDimension(fileName)
+    if width == 0 || height == 0 {
+        json.NewEncoder(w).Encode(bson.M{"error": "Bad image format"})
+        return
+    }
     colors := GetImageColors(fileName)
     json.NewEncoder(w).Encode(bson.M{"file": fileName, "size": bson.M{"width": width, "height": height}, "colors": colors})
 	}

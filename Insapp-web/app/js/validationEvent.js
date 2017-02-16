@@ -21,6 +21,10 @@ app.controller('ValidationEvent', ['$scope', '$resource', '$location', 'Session'
         for (eventId of events){
           Event.get({id:eventId, token:Session.getToken()}, function(event){
             event.nbParticipant = (event.participants != null ? event.participants.length : 0)
+            event.nbParticipant = (event.participants != null ? event.participants.length : 0)
+            event.nbMaybe = (event.maybe != null ? event.maybe.length : 0)
+            event.nbNotgoing = (event.notgoing != null ? event.notgoing.length : 0)
+            event.nbComments = (event.comments != null ? event.comments.length : 0)
             event.associationName = association.name
             if(new Date(event.dateEnd).getTime() < new Date().getTime()){
               $scope.allPastEvents.push(event)
