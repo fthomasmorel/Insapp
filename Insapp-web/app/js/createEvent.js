@@ -193,7 +193,7 @@ app.controller('CreateEvent', ['$scope', '$resource', 'Session', '$location', 'U
 
     $scope.currentEvent.nonotification = !$scope.currentEvent.enableNotification
 
-    promotions = Object.keys($scope.promotions).filter(function(promotion){
+    var promotions = Object.keys($scope.promotions).filter(function(promotion){
       return $scope.promotions[promotion]
     })
 

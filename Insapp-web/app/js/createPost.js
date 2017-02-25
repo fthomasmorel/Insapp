@@ -172,7 +172,7 @@ app.controller('CreatePost', ['$scope', '$resource', '$routeParams', 'fileUpload
 
       $scope.currentPost.nonotification = !$scope.currentPost.enableNotification
 
-    promotions = Object.keys($scope.promotions).filter(function(promotion){
+    var promotions = Object.keys($scope.promotions).filter(function(promotion){
         return $scope.promotions[promotion]
     })
 
